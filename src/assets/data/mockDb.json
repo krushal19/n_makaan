@@ -1,0 +1,53 @@
+{
+    "properties": [
+        {
+            "id": "1",
+            "title": "Golden Urban House For Sale",
+            "description": "Beautiful 3 bedroom house in prime location",
+            "address": "123 Street, New York, USA",
+            "location": "New York",
+            "price": 500000,
+            "type": "sell",
+            "category": "Apartment",
+            "sqft": 1000,
+            "beds": 3,
+            "bath": 2,
+            "image": "img/property-1.jpg",
+            "sellerId": "seller1"
+        },
+        {
+            "id": "2",
+            "title": "Modern Apartment For Rent",
+            "description": "Spacious 2 bedroom apartment",
+            "address": "456 Avenue, London, UK",
+            "location": "London",
+            "price": 2500,
+            "type": "rent",
+            "category": "Villa",
+            "sqft": 850,
+            "beds": 2,
+            "bath": 1,
+            "image": "img/property-2.jpg",
+            "sellerId": "seller1"
+        }
+    ],
+    "testimonials": [
+        {
+            "id": "1",
+            "name": "John Doe",
+            "profession": "Business Owner",
+            "text": "Excellent service! Found my dream home quickly.",
+            "image": "img/testimonial-1.jpg",
+            "rating": 5
+        },
+        {
+            "id": "2",
+            "name": "Jane Smith",
+            "profession": "Software Engineer",
+            "text": "Professional and helpful team. Highly recommended!",
+            "image": "img/testimonial-2.jpg",
+            "rating": 5
+        }
+    ],
+    "users": []
+}

@@ -1,0 +1,50 @@
+<div class="container-xxl py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+                <div class="card shadow-sm">
+                    <div class="card-body p-5">
+                        <h2 class="text-center mb-4">Login</h2>
+
+                        <div *ngIf="errorMessage" class="alert alert-danger">
+                            {{ errorMessage }}
+                        </div>
+
+                        <div *ngIf="successMessage" class="alert alert-success">
+                            {{ successMessage }}
+                        </div>
+
+                        <form (ngSubmit)="login()">
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email address</label>
+                                <input type="email" class="form-control" id="email" [(ngModel)]="email" name="email"
+                                    required placeholder="Enter your email">
+                            </div>
+                            <div class="mb-3">
+                                <label for="password" class="form-label">Password</label>
+                                <input type="password" class="form-control" id="password" [(ngModel)]="password"
+                                    name="password" required placeholder="Enter your password">
+                            </div>
+                            <div class="mb-3">
+                                <label for="role" class="form-label">Login as</label>
+                                <select class="form-select" id="role" [(ngModel)]="selectedRole" name="role" required>
+                                    <option value="customer">Customer</option>
+                                    <option value="seller">Seller</option>
+                                    <option value="admin">Admin</option>
+                                </select>
+                                <small class="form-text text-muted">Select the role you registered with</small>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100" [disabled]="loading">
+                                {{ loading ? 'Logging in...' : 'Login' }}
+                            </button>
+                        </form>
+
+                        <p class="text-center mt-3">
+                            Don't have an account? <a routerLink="/register">Register here</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,25 @@
+<div class="container">
+    <h2>Firebase Firestore Integration Demo</h2>
+
+    <!-- Add Property Form -->
+    <div style="margin-bottom: 2rem; border: 1px solid #eee; padding: 1rem;">
+        <h3>Add New Property</h3>
+        <input type="text" placeholder="Title" [(ngModel)]="newProperty.title" style="margin-right: 10px;">
+        <input type="number" placeholder="Price" [(ngModel)]="newProperty.price" style="margin-right: 10px;">
+        <input type="text" placeholder="Location" [(ngModel)]="newProperty.location" style="margin-right: 10px;">
+        <button class="btn btn-add" (click)="addProperty()">Add Property</button>
+    </div>
+
+    <!-- Properties List -->
+    <h3>Properties List</h3>
+    <div *ngIf="properties$ | async as properties">
+        <div *ngFor="let property of properties" class="property-card">
+            <h4>{{ property.title }}</h4>
+            <p><strong>Price:</strong> ${{ property.price }}</p>
+            <p><strong>Location:</strong> {{ property.location }}</p>
+            <button class="btn btn-delete" *ngIf="property.id" (click)="deleteProperty(property.id)">Delete</button>
+        </div>
+
+        <p *ngIf="properties.length === 0">No properties found.</p>
+    </div>
+</div>

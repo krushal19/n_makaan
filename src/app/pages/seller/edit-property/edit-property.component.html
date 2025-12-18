@@ -1,0 +1,83 @@
+<div class="container-fluid py-5">
+    <div class="container">
+        <h2 class="mb-4">Edit Property</h2>
+        <form [formGroup]="propertyForm" (ngSubmit)="onSubmit()">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="title" formControlName="title" placeholder="Title">
+                        <label for="title">Property Title</label>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="price" formControlName="price" placeholder="Price">
+                        <label for="price">Price ($)</label>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="form-floating">
+                        <textarea class="form-control" placeholder="Description" id="description"
+                            formControlName="description" style="height: 100px"></textarea>
+                        <label for="description">Description</label>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="address" formControlName="address"
+                            placeholder="Address">
+                        <label for="address">Address</label>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-floating">
+                        <select class="form-select" id="type" formControlName="type">
+                            <option value="sell">For Sell</option>
+                            <option value="rent">For Rent</option>
+                        </select>
+                        <label for="type">Type</label>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-floating">
+                        <select class="form-select" id="category" formControlName="category">
+                            <option value="Apartment">Apartment</option>
+                            <option value="Villa">Villa</option>
+                            <option value="Home">Home</option>
+                            <option value="Office">Office</option>
+                            <option value="Building">Building</option>
+                            <option value="Townhouse">Townhouse</option>
+                            <option value="Shop">Shop</option>
+                            <option value="Garage">Garage</option>
+                        </select>
+                        <label for="category">Category</label>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-floating">
+                        <input type="number" class="form-control" id="sqft" formControlName="sqft" placeholder="Sqft">
+                        <label for="sqft">Area (Sqft)</label>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-floating">
+                        <input type="number" class="form-control" id="beds" formControlName="beds" placeholder="Beds">
+                        <label for="beds">Beds</label>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-floating">
+                        <input type="number" class="form-control" id="bath" formControlName="bath" placeholder="Bath">
+                        <label for="bath">Baths</label>
+                    </div>
+                </div>
+
+                <div class="col-12">
+                    <button class="btn btn-primary w-100 py-3" type="submit" [disabled]="propertyForm.invalid">Update
+                        Property</button>
+                    <a routerLink="/seller/properties" class="btn btn-secondary w-100 py-3 mt-2">Cancel</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

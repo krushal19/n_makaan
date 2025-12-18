@@ -1,0 +1,33 @@
+<div class="container-fluid py-5">
+    <div class="container">
+        <h2>Seller Management</h2>
+        <div class="table-responsive mt-4">
+            <table class="table table-striped">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Joined</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (seller of sellers; track seller.uid) {
+                    <tr>
+                        <td>{{ seller.displayName }}</td>
+                        <td>{{ seller.email }}</td>
+                        <td>{{ seller.createdAt || 'N/A' }}</td>
+                        <td>
+                            <button (click)="deleteSeller(seller.uid)" class="btn btn-sm btn-danger">Delete</button>
+                        </td>
+                    </tr>
+                    } @empty {
+                    <tr>
+                        <td colspan="4" class="text-center">No sellers found.</td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

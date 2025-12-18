@@ -1,0 +1,37 @@
+<div class="container-fluid py-5">
+    <div class="container">
+        <h2>Property Management</h2>
+        <div class="table-responsive mt-4">
+            <table class="table table-bordered table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Image</th>
+                        <th>Title</th>
+                        <th>Type</th>
+                        <th>Price</th>
+                        <th>Seller</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (property of properties; track property.id) {
+                    <tr>
+                        <td><img [src]="property.img" alt="" style="width: 80px; height: 60px; object-fit: cover;"></td>
+                        <td>{{ property.title }}</td>
+                        <td>{{ property.type }}</td>
+                        <td>{{ property.price }}</td>
+                        <td>{{ property.sellerName || 'Unknown' }}</td>
+                        <td>
+                            <button (click)="deleteProperty(property.id)" class="btn btn-sm btn-danger">Delete</button>
+                        </td>
+                    </tr>
+                    } @empty {
+                    <tr>
+                        <td colspan="6" class="text-center">No properties found.</td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

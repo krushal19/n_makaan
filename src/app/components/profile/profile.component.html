@@ -1,0 +1,130 @@
+<app-header></app-header>
+
+<div class="profile-container">
+  <div class="container py-5">
+    <div class="row justify-content-center">
+      <div class="col-md-8 col-lg-6">
+        
+        <div class="profile-card">
+          <div class="profile-header">
+            <div class="profile-avatar">
+              <span class="avatar-icon">👤</span>
+            </div>
+            <h2>My Profile</h2>
+          </div>
+
+          <div *ngIf="isLoading" class="text-center py-4">
+            <p>Loading profile...</p>
+          </div>
+
+          <div *ngIf="!isLoading && userProfile" class="profile-content">
+            
+            <!-- Success Message -->
+            <div *ngIf="successMessage" class="alert alert-success">
+              {{ successMessage }}
+            </div>
+
+            <!-- Error Message -->
+            <div *ngIf="errorMessage" class="alert alert-danger">
+              {{ errorMessage }}
+            </div>
+
+            <!-- Profile Information -->
+            <div *ngIf="!isEditing" class="profile-info">
+              <div class="info-item">
+                <label>Full Name</label>
+                <p>{{ userProfile.displayName || 'Not provided' }}</p>
+              </div>
+
+              <div class="info-item">
+                <label>Email</label>
+                <p>{{ userProfile.email }}</p>
+              </div>
+
+              <div class="info-item">
+                <label>Phone Number</label>
+                <p>{{ userProfile.phoneNumber || 'Not provided' }}</p>
+              </div>
+
+              <div class="info-item">
+                <label>Member Since</label>
+                <p>{{ userProfile.createdAt | date:'mediumDate' }}</p>
+              </div>
+
+              <div class="profile-actions">
+                <button class="btn btn-primary" (click)="toggleEdit()">
+                  Edit Profile
+                </button>
+                <button class="btn btn-outline-danger" (click)="logout()">
+                  Logout
+                </button>
+              </div>
+            </div>
+
+            <!-- Edit Profile Form -->
+            <form *ngIf="isEditing" [formGroup]="profileForm" (ngSubmit)="saveProfile()">
+              <div class="form-group">
+                <label for="displayName">Full Name</label>
+                <input 
+                  type="text" 
+                  id="displayName" 
+                  formControlName="displayName"
+                  class="form-control"
+                  [class.is-invalid]="profileForm.get('displayName')?.invalid && profileForm.get('displayName')?.touched"
+                >
+                <div class="invalid-feedback" *ngIf="profileForm.get('displayName')?.invalid && profileForm.get('displayName')?.touched">
+                  <span *ngIf="profileForm.get('displayName')?.errors?.['required']">Name is required</span>
+                  <span *ngIf="profileForm.get('displayName')?.errors?.['minlength']">Name must be at least 2 characters</span>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="email">Email</label>
+                <input 
+                  type="email" 
+                  id="email" 
+                  formControlName="email"
+                  class="form-control"
+                  readonly
+                >
+                <small class="text-muted">Email cannot be changed</small>
+              </div>
+
+              <div class="form-group">
+                <label for="phoneNumber">Phone Number</label>
+                <input 
+                  type="tel" 
+                  id="phoneNumber" 
+                  formControlName="phoneNumber"
+                  class="form-control"
+                  placeholder="Enter your phone number"
+                >
+              </div>
+
+              <div class="form-actions">
+                <button 
+                  type="submit" 
+                  class="btn btn-success"
+                  [disabled]="profileForm.invalid"
+                >
+                  Save Changes
+                </button>
+                <button 
+                  type="button" 
+                  class="btn btn-secondary"
+                  (click)="toggleEdit()"
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-footer></app-footer>

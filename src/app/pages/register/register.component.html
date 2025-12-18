@@ -1,0 +1,76 @@
+<!-- Header Start -->
+<div class="container-fluid header bg-white p-0">
+    <div class="row g-0 align-items-center flex-column-reverse flex-md-row">
+        <div class="col-md-6 p-5 mt-lg-5">
+            <h1 class="display-5 animated fadeIn mb-4">Register</h1>
+            <nav aria-label="breadcrumb animated fadeIn">
+                <ol class="breadcrumb text-uppercase">
+                    <li class="breadcrumb-item"><a routerLink="/">Home</a></li>
+                    <li class="breadcrumb-item text-body active" aria-current="page">Register</li>
+                </ol>
+            </nav>
+        </div>
+        <div class="col-md-6 animated fadeIn">
+            <img class="img-fluid" src="assets/img/header.jpg" alt="">
+        </div>
+    </div>
+</div>
+<!-- Header End -->
+
+<div class="container-xxl py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+                <div class="wow fadeInUp" data-wow-delay="0.1s">
+                    <h1 class="text-center mb-5">Create an Account</h1>
+                    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+                        <div class="row g-3">
+                            @if (errorMsg) {
+                            <div class="col-12">
+                                <div class="alert alert-danger">{{ errorMsg }}</div>
+                            </div>
+                            }
+                            <div class="col-12">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" id="displayName"
+                                        formControlName="displayName" placeholder="Full Name">
+                                    <label for="displayName">Full Name</label>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-floating">
+                                    <input type="email" class="form-control" id="email" formControlName="email"
+                                        placeholder="Email Address">
+                                    <label for="email">Email Address</label>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-floating">
+                                    <input type="password" class="form-control" id="password" formControlName="password"
+                                        placeholder="Password">
+                                    <label for="password">Password</label>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-floating">
+                                    <select class="form-select" id="role" formControlName="role">
+                                        <option value="customer">Customer</option>
+                                        <option value="seller">Seller</option>
+                                    </select>
+                                    <label for="role">Register As</label>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <button class="btn btn-primary w-100 py-3" type="submit"
+                                    [disabled]="registerForm.invalid">Register</button>
+                            </div>
+                            <div class="col-12 text-center">
+                                <p>Already have an account? <a routerLink="/login">Login here</a></p>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

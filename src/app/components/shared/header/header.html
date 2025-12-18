@@ -1,0 +1,75 @@
+<!-- Modern Navbar Start -->
+<nav class="modern-navbar">
+    <div class="navbar-container">
+        <!-- Mobile Menu Toggle -->
+        <button class="mobile-toggle" (click)="toggleMobileMenu()">
+            <span class="hamburger-line" [class.active]="isMobileMenuOpen"></span>
+            <span class="hamburger-line" [class.active]="isMobileMenuOpen"></span>
+            <span class="hamburger-line" [class.active]="isMobileMenuOpen"></span>
+        </button>
+
+        <!-- Navigation Links -->
+        <div class="nav-links" [class.mobile-open]="isMobileMenuOpen">
+            <a routerLink="/" routerLinkActive="active" class="nav-link" (click)="closeMobileMenu()">
+                HOME
+            </a>
+            <a routerLink="/about" routerLinkActive="active" class="nav-link" (click)="closeMobileMenu()">
+                ABOUT
+            </a>
+            
+            <!-- Property Dropdown -->
+            <div class="nav-dropdown" (mouseenter)="showDropdown('property')" (mouseleave)="hideDropdown('property')">
+                <a href="#" class="nav-link dropdown-trigger">
+                    PROPERTY <i class="dropdown-arrow">▼</i>
+                </a>
+                <div class="dropdown-menu" [class.show]="activeDropdown === 'property'">
+                    <a routerLink="/property" class="dropdown-item" (click)="closeMobileMenu()">Property List</a>
+                    <a routerLink="/property/type" class="dropdown-item" (click)="closeMobileMenu()">Property Type</a>
+                    <a routerLink="/property/agent" class="dropdown-item" (click)="closeMobileMenu()">Property Agent</a>
+                </div>
+            </div>
+
+            <!-- Pages Dropdown -->
+            <div class="nav-dropdown" (mouseenter)="showDropdown('pages')" (mouseleave)="hideDropdown('pages')">
+                <a href="#" class="nav-link dropdown-trigger">
+                    PAGES <i class="dropdown-arrow">▼</i>
+                </a>
+                <div class="dropdown-menu" [class.show]="activeDropdown === 'pages'">
+                    <a routerLink="/testimonial" class="dropdown-item" (click)="closeMobileMenu()">Testimonial</a>
+                    <a routerLink="/404" class="dropdown-item" (click)="closeMobileMenu()">404 Error</a>
+                </div>
+            </div>
+
+            <a routerLink="/contact" routerLinkActive="active" class="nav-link" (click)="closeMobileMenu()">
+                CONTACT
+            </a>
+        </div>
+
+        <!-- User Section -->
+        <div class="user-section">
+            <!-- Logged in user -->
+            <div class="nav-dropdown user-dropdown" *ngIf="isLoggedIn" 
+                 (mouseenter)="showDropdown('user')" (mouseleave)="hideDropdown('user')">
+                <a href="#" class="nav-link user-trigger">
+                    <span class="user-icon">👤</span>
+                    <span class="user-name">{{ user?.displayName || 'USER' }}</span>
+                    <i class="dropdown-arrow">▼</i>
+                </a>
+                <div class="dropdown-menu user-menu" [class.show]="activeDropdown === 'user'">
+                    <a routerLink="/profile" class="dropdown-item" (click)="closeMobileMenu()">
+                        <span class="menu-icon">👤</span> My Profile
+                    </a>
+                    <a href="#" class="dropdown-item logout-item" (click)="logout(); closeMobileMenu()">
+                        <span class="menu-icon">🚪</span> Logout
+                    </a>
+                </div>
+            </div>
+
+            <!-- Login button for non-logged users -->
+            <a routerLink="/login" class="login-btn" *ngIf="!isLoggedIn">
+                GET STARTED
+            </a>
+        </div>
+    </div>
+</nav>
+<!-- Modern Navbar End -->
