@@ -1,1 +1,38 @@
-<p>manage-users works!</p>
+<div class="container-fluid py-5">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>Manage Users</h2>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Email</th>
+                        <th>Display Name</th>
+                        <th>Role</th>
+                        <th>Created At</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let user of users">
+                        <td>{{ user.email }}</td>
+                        <td>{{ user.displayName || 'N/A' }}</td>
+                        <td>
+                            <select class="form-select" [(ngModel)]="user.role" (change)="changeRole(user)">
+                                <option value="customer">Customer</option>
+                                <option value="seller">Seller</option>
+                                <option value="admin">Admin</option>
+                            </select>
+                        </td>
+                        <td>{{ user.createdAt | date:'short' }}</td>
+                        <td>
+                            <button (click)="deleteUser(user)" class="btn btn-sm btn-danger">Delete</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

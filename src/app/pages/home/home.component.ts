@@ -2,14 +2,13 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { ApiService } from '../../services/api.service';
-import { AuthService, UserProfile } from '../../services/auth.service';
-import { HeaderComponent } from '../../components/shared/header/header';
-import { FooterComponent } from '../../components/shared/footer/footer';
+import { AuthService } from '../../services/auth.service';
+import { UserProfile } from '../../core/models/user.model';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, RouterLink, HeaderComponent, FooterComponent],
+  imports: [CommonModule, RouterLink],
   templateUrl: './home.html',
   styleUrl: './home.scss',
 })

@@ -2,15 +2,9 @@ import { Injectable, inject } from '@angular/core';
 import { Auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, user, User } from '@angular/fire/auth';
 import { Firestore, doc, setDoc, getDoc } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
+import { UserProfile } from '../core/models/user.model';
 
-export interface UserProfile {
-  uid: string;
-  email: string;
-  displayName?: string;
-  phoneNumber?: string;
-  role: 'customer' | 'seller' | 'admin';
-  createdAt: Date;
-}
+export type { UserProfile };
 
 @Injectable({
   providedIn: 'root'
@@ -18,13 +12,13 @@ export interface UserProfile {
 export class AuthService {
   private auth = inject(Auth);
   private firestore = inject(Firestore);
-  
+
   user$ = user(this.auth);
 
   async register(email: string, password: string, displayName?: string, role: 'customer' | 'seller' | 'admin' = 'customer'): Promise<User> {
     try {
       const credential = await createUserWithEmailAndPassword(this.auth, email, password);
-      
+
       // Store user profile in Firestore
       const userProfile: UserProfile = {
         uid: credential.user.uid,
@@ -33,9 +27,9 @@ export class AuthService {
         role: role,
         createdAt: new Date()
       };
-      
+
       await setDoc(doc(this.firestore, 'users', credential.user.uid), userProfile);
-      
+
       return credential.user;
     } catch (error) {
       throw error;
@@ -53,7 +47,7 @@ export class AuthService {
         });
         return credential.user;
       }
-      
+
       const credential = await signInWithEmailAndPassword(this.auth, email, password);
       return credential.user;
     } catch (error) {
@@ -65,7 +59,7 @@ export class AuthService {
     try {
       // Create the hardcoded admin account
       const credential = await createUserWithEmailAndPassword(this.auth, 'admin@makaan.com', 'admin123');
-      
+
       // Store admin profile in Firestore
       const adminProfile: UserProfile = {
         uid: credential.user.uid,
@@ -74,9 +68,9 @@ export class AuthService {
         role: 'admin',
         createdAt: new Date()
       };
-      
+
       await setDoc(doc(this.firestore, 'users', credential.user.uid), adminProfile);
-      
+
       return credential;
     } catch (error) {
       console.error('Error creating hardcoded admin:', error);
@@ -96,7 +90,7 @@ export class AuthService {
     try {
       const docRef = doc(this.firestore, 'users', uid);
       const docSnap = await getDoc(docRef);
-      
+
       if (docSnap.exists()) {
         const data = docSnap.data();
         return {

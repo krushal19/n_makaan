@@ -1,6 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { AdminService, AdminStats, DatabaseCollection } from '../../../services/admin.service';
 import { AuthService } from '../../../services/auth.service';

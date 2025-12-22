@@ -18,7 +18,7 @@ import { SellerDashboardPage } from './pages/seller-dashboard/seller-dashboard.p
 import { AdminDashboardPage } from './pages/admin-dashboard/admin-dashboard.page';
 import { PropertiesPage } from './pages/properties/properties.page';
 import { authGuard, redirectIfAuthenticatedGuard } from './guards/auth.guard';
-import { adminGuard } from './guards/admin.guard';
+import { adminGuard, sellerGuard, customerGuard } from './guards/role.guards';
 
 export const routes: Routes = [
     { path: '', component: HomeComponent },
@@ -73,12 +73,12 @@ export const routes: Routes = [
     {
         path: 'customer-dashboard',
         component: CustomerDashboardPage,
-        canActivate: [authGuard]
+        canActivate: [customerGuard]
     },
     {
         path: 'seller-dashboard',
         component: SellerDashboardPage,
-        canActivate: [authGuard]
+        canActivate: [sellerGuard]
     },
     {
         path: 'admin-dashboard',

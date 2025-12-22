@@ -35,7 +35,7 @@ export class RegisterComponent {
   passwordMatchValidator(form: FormGroup) {
     const password = form.get('password');
     const confirmPassword = form.get('confirmPassword');
-    
+
     if (password && confirmPassword && password.value !== confirmPassword.value) {
       confirmPassword.setErrors({ passwordMismatch: true });
     } else if (confirmPassword?.errors?.['passwordMismatch']) {
@@ -54,6 +54,7 @@ export class RegisterComponent {
 
       try {
         const { email, password, displayName, role } = this.registerForm.value;
+
         await this.authService.register(email, password, displayName, role);
         this.router.navigate(['/home']);
       } catch (error: any) {

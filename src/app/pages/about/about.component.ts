@@ -1,12 +1,11 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { HeaderComponent } from '../../components/shared/header/header';
-import { FooterComponent } from '../../components/shared/footer/footer';
 
 @Component({
   selector: 'app-about',
   standalone: true,
-  imports: [RouterLink, HeaderComponent, FooterComponent],
+  imports: [CommonModule, RouterLink],
   templateUrl: './about.html',
   styleUrl: './about.scss',
 })

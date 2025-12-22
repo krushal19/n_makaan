@@ -1,12 +1,11 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { HeaderComponent } from '../../components/shared/header/header';
-import { FooterComponent } from '../../components/shared/footer/footer';
 
 @Component({
   selector: 'app-contact',
   standalone: true,
-  imports: [RouterLink, HeaderComponent, FooterComponent],
+  imports: [CommonModule, RouterLink],
   templateUrl: './contact.html',
   styleUrl: './contact.scss',
 })

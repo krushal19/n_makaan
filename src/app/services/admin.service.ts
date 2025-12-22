@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { Firestore, collection, getDocs, doc, deleteDoc, updateDoc, query, orderBy, where, limit } from '@angular/fire/firestore';
 import { Observable, from, map } from 'rxjs';
-import { UserProfile } from './auth.service';
+import { UserProfile } from '../core/models/user.model';
 
 export interface AdminStats {
   totalUsers: number;

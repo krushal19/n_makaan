@@ -1,9 +1,9 @@
-export interface User {
-    uid: string;
-    email: string;
-    displayName: string;
-    role: 'customer' | 'seller' | 'admin';
-    photoURL?: string;
-    createdAt?: any;
-    updatedAt?: any;
+export interface UserProfile {
+  uid: string;
+  email: string;
+  displayName?: string;
+  phoneNumber?: string;
+  role: 'admin' | 'seller' | 'customer';
+  createdAt?: any;
+  sellerId?: string;
 }
