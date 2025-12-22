@@ -15,6 +15,7 @@ export interface Property {
   sellerName: string;
   createdAt: Date;
   images?: string[];
+  status?: 'pending' | 'active' | 'sold';
 }
 
 @Injectable({

@@ -43,10 +43,12 @@ export class LoginComponent {
         } else {
           // Get user profile to check role
           const profile = await this.authService.getUserProfile(user.uid);
-          
+
           // Redirect based on role
           if (profile?.role === 'admin') {
             this.router.navigate(['/admin']);
+          } else if (profile?.role === 'seller') {
+            this.router.navigate(['/seller']);
           } else {
             this.router.navigate(['/home']);
           }

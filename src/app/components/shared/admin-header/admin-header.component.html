@@ -1,0 +1,29 @@
+<!-- Admin Header -->
+<header class="admin-header">
+    <div class="header-container">
+        <div class="logo-section">
+            <div class="logo">
+                <span class="logo-icon">⚙️</span>
+                <span class="logo-text">Admin Panel</span>
+            </div>
+        </div>
+
+        <div class="user-section">
+            <div class="user-dropdown" *ngIf="isLoggedIn">
+                <a href="#" class="user-trigger">
+                    <span class="user-icon">👤</span>
+                    <span class="user-name">{{ user?.displayName || 'Admin' }}</span>
+                    <i class="dropdown-arrow">▼</i>
+                </a>
+                <div class="user-menu">
+                    <a routerLink="/profile" class="dropdown-item">
+                        <span class="menu-icon">👤</span> My Profile
+                    </a>
+                    <a href="#" class="dropdown-item logout-item" (click)="logout()">
+                        <span class="menu-icon">🚪</span> Logout
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>

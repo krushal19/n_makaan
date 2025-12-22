@@ -82,3 +82,62 @@ export const adminGuard: CanActivateFn = (route, state) => {
         })
     );
 };
+
+export const homeGuard: CanActivateFn = (route, state) => {
+    const authService = inject(AuthService);
+    const router = inject(Router);
+
+    return authService.user$.pipe(
+        take(1),
+        switchMap(user => {
+            if (!user) {
+                router.navigate(['/login']);
+                return of(false);
+            }
+            // Allow hardcoded admin
+            if (user.email === 'admin@makaan.com') {
+                return of(true);
+            }
+            return from(authService.getUserProfile(user.uid)).pipe(
+                map(profile => {
+                    if (profile && (profile.role === 'admin' || profile.role === 'customer')) {
+                        return true;
+                    } else if (profile && profile.role === 'seller') {
+                        // Block seller from home page and redirect to seller dashboard
+                        router.navigate(['/seller']);
+                        return false;
+                    } else {
+                        router.navigate(['/login']);
+                        return false;
+                    }
+                })
+            );
+        })
+    );
+};
+
+export const sellerOnlyGuard: CanActivateFn = (route, state) => {
+    const authService = inject(AuthService);
+    const router = inject(Router);
+
+    return authService.user$.pipe(
+        take(1),
+        switchMap(user => {
+            if (!user) {
+                router.navigate(['/login']);
+                return of(false);
+            }
+            return from(authService.getUserProfile(user.uid)).pipe(
+                map(profile => {
+                    if (profile && profile.role === 'seller') {
+                        return true;
+                    } else {
+                        // Block non-sellers from accessing any seller routes
+                        router.navigate(['/']);
+                        return false;
+                    }
+                })
+            );
+        })
+    );
+};

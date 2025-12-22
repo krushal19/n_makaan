@@ -13,87 +13,111 @@ import { ProfileComponent } from './components/profile/profile.component';
 import { AdminDashboardComponent } from './components/admin/admin-dashboard/admin-dashboard.component';
 import { AdminInfoComponent } from './components/admin-info/admin-info.component';
 import { CreateAdminComponent } from './utils/create-admin.component';
+import { AdminLayoutComponent } from './components/shared/admin-layout/admin-layout.component';
 import { CustomerDashboardPage } from './pages/customer-dashboard/customer-dashboard.page';
 import { SellerDashboardPage } from './pages/seller-dashboard/seller-dashboard.page';
 import { AdminDashboardPage } from './pages/admin-dashboard/admin-dashboard.page';
 import { PropertiesPage } from './pages/properties/properties.page';
+import { CustomerLayoutComponent } from './components/shared/customer-layout/customer-layout.component';
 import { authGuard, redirectIfAuthenticatedGuard } from './guards/auth.guard';
-import { adminGuard, sellerGuard, customerGuard } from './guards/role.guards';
+import { adminGuard, sellerGuard, customerGuard, homeGuard, sellerOnlyGuard } from './guards/role.guards';
 
 export const routes: Routes = [
-    { path: '', component: HomeComponent },
-    { path: 'home', component: HomeComponent },
-    { path: 'about', component: AboutComponent },
-    { path: 'contact', component: ContactComponent },
     {
-        path: 'property',
+        path: '',
+        component: CustomerLayoutComponent,
         children: [
-            { path: '', component: PropertyListComponent },
-            { path: 'list', component: PropertyListComponent },
-            { path: 'type', component: PropertyTypeComponent },
-            { path: 'agent', component: PropertyAgentComponent },
+            { path: '', component: HomeComponent, canActivate: [homeGuard] },
+            { path: 'home', component: HomeComponent, canActivate: [homeGuard] },
+            { path: 'about', component: AboutComponent },
+            { path: 'contact', component: ContactComponent },
+            {
+                path: 'property',
+                children: [
+                    { path: '', component: PropertyListComponent },
+                    { path: 'list', component: PropertyListComponent },
+                    { path: 'type', component: PropertyTypeComponent },
+                    { path: 'agent', component: PropertyAgentComponent },
+                ]
+            },
+            { path: 'testimonial', component: TestimonialComponent },
+
+            // Auth Pages
+            {
+                path: 'login',
+                component: LoginComponent,
+                canActivate: [redirectIfAuthenticatedGuard]
+            },
+            {
+                path: 'register',
+                component: RegisterComponent,
+                canActivate: [redirectIfAuthenticatedGuard]
+            },
+
+            // Protected Dashboard
+            {
+                path: 'dashboard',
+                component: DashboardComponent,
+                canActivate: [authGuard]
+            },
+
+            // Protected Profile
+            {
+                path: 'profile',
+                component: ProfileComponent,
+                canActivate: [authGuard]
+            },
+
+
+
+            // Legacy Dashboards (if needed)
+            {
+                path: 'customer-dashboard',
+                component: CustomerDashboardPage,
+                canActivate: [customerGuard]
+            },
+            {
+                path: 'seller-dashboard',
+                component: SellerDashboardPage,
+                canActivate: [sellerGuard]
+            },
+            {
+                path: 'admin-dashboard',
+                component: AdminDashboardPage,
+                canActivate: [authGuard]
+            },
+
+            // Demo Property CRUD
+            { path: 'demo-properties', component: PropertiesPage },
+
+            // Admin Info & Creation Utility
+            { path: 'admin-info', component: AdminInfoComponent },
+            { path: 'create-admin', component: CreateAdminComponent },
+
+            // Catch all
+            { path: '404', component: HomeComponent },
         ]
     },
-    { path: 'testimonial', component: TestimonialComponent },
 
-    // Auth Pages
-    { 
-        path: 'login', 
-        component: LoginComponent,
-        canActivate: [redirectIfAuthenticatedGuard]
-    },
-    { 
-        path: 'register', 
-        component: RegisterComponent,
-        canActivate: [redirectIfAuthenticatedGuard]
-    },
-
-    // Protected Dashboard
+    // Seller Module (separate layout) - Strict seller-only access
     {
-        path: 'dashboard',
-        component: DashboardComponent,
-        canActivate: [authGuard]
+        path: 'seller',
+        loadChildren: () => import('./seller/seller.module').then(m => m.SellerModule),
+        canActivate: [sellerOnlyGuard]
     },
 
-    // Protected Profile
-    {
-        path: 'profile',
-        component: ProfileComponent,
-        canActivate: [authGuard]
-    },
-
-    // Admin Dashboard
+    // Admin Module (separate layout) - Strict admin-only access
     {
         path: 'admin',
-        component: AdminDashboardComponent,
-        canActivate: [adminGuard]
+        component: AdminLayoutComponent,
+        canActivate: [adminGuard],
+        children: [
+            { path: '', component: AdminDashboardComponent },
+            { path: 'dashboard', component: AdminDashboardComponent },
+            // Add more admin routes here as needed
+        ]
     },
 
-    // Legacy Dashboards (if needed)
-    {
-        path: 'customer-dashboard',
-        component: CustomerDashboardPage,
-        canActivate: [customerGuard]
-    },
-    {
-        path: 'seller-dashboard',
-        component: SellerDashboardPage,
-        canActivate: [sellerGuard]
-    },
-    {
-        path: 'admin-dashboard',
-        component: AdminDashboardPage,
-        canActivate: [authGuard]
-    },
-
-    // Demo Property CRUD
-    { path: 'demo-properties', component: PropertiesPage },
-
-    // Admin Info & Creation Utility
-    { path: 'admin-info', component: AdminInfoComponent },
-    { path: 'create-admin', component: CreateAdminComponent },
-
-    // Catch all
-    { path: '404', component: HomeComponent },
+    // Global catch all
     { path: '**', redirectTo: '' }
 ];

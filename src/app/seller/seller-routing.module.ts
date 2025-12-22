@@ -1,14 +1,16 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { sellerGuard } from './guards/seller.guard';
+import { SellerLayoutComponent } from './components/seller-layout/seller-layout.component';
+import { sellerGuard } from '../guards/role.guards';
 
 const routes: Routes = [
   {
-    path: '',
+    path: 'seller',
+    component: SellerLayoutComponent,
     canActivate: [sellerGuard],
     children: [
       {
-        path: 'dashboard',
+        path: '',
         loadComponent: () => import('./components/seller-dashboard/seller-dashboard.component').then(m => m.SellerDashboardComponent)
       },
       {
@@ -18,11 +20,6 @@ const routes: Routes = [
       {
         path: 'my-properties',
         loadComponent: () => import('./components/my-properties/my-properties.component').then(m => m.MyPropertiesComponent)
-      },
-      {
-        path: '',
-        redirectTo: 'dashboard',
-        pathMatch: 'full'
       }
     ]
   }
