@@ -2,7 +2,7 @@ import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { switchMap, map, take } from 'rxjs/operators';
-import { from, of } from 'rxjs';
+import { of } from 'rxjs';
 
 // Strict Customer Guard - Only customers can access customer routes
 export const customerGuard: CanActivateFn = (route, state) => {
@@ -16,7 +16,8 @@ export const customerGuard: CanActivateFn = (route, state) => {
                 router.navigate(['/login']);
                 return of(false);
             }
-            return from(authService.getUserProfile(user.uid)).pipe(
+            // Use Observable-based getUserProfile - NO Promise conversion!
+            return authService.getUserProfile(user.uid).pipe(
                 map(profile => {
                     if (profile && profile.role === 'customer') {
                         return true;
@@ -49,7 +50,8 @@ export const sellerGuard: CanActivateFn = (route, state) => {
                 router.navigate(['/login']);
                 return of(false);
             }
-            return from(authService.getUserProfile(user.uid)).pipe(
+            // Use Observable-based getUserProfile - NO Promise conversion!
+            return authService.getUserProfile(user.uid).pipe(
                 map(profile => {
                     if (profile && profile.role === 'seller') {
                         return true;
@@ -86,7 +88,8 @@ export const adminGuard: CanActivateFn = (route, state) => {
             if (user.email === 'admin@makaan.com') {
                 return of(true);
             }
-            return from(authService.getUserProfile(user.uid)).pipe(
+            // Use Observable-based getUserProfile - NO Promise conversion!
+            return authService.getUserProfile(user.uid).pipe(
                 map(profile => {
                     if (profile && profile.role === 'admin') {
                         return true;
@@ -135,7 +138,8 @@ export const homeGuard: CanActivateFn = (route, state) => {
             if (user.email === 'admin@makaan.com') {
                 return of(true);
             }
-            return from(authService.getUserProfile(user.uid)).pipe(
+            // Use Observable-based getUserProfile - NO Promise conversion!
+            return authService.getUserProfile(user.uid).pipe(
                 map(profile => {
                     if (profile && (profile.role === 'admin' || profile.role === 'customer')) {
                         return true;
@@ -165,7 +169,8 @@ export const sellerOnlyGuard: CanActivateFn = (route, state) => {
                 router.navigate(['/login']);
                 return of(false);
             }
-            return from(authService.getUserProfile(user.uid)).pipe(
+            // Use Observable-based getUserProfile - NO Promise conversion!
+            return authService.getUserProfile(user.uid).pipe(
                 map(profile => {
                     if (profile && profile.role === 'seller') {
                         return true;
@@ -202,7 +207,8 @@ export const adminOnlyGuard: CanActivateFn = (route, state) => {
             if (user.email === 'admin@makaan.com') {
                 return of(true);
             }
-            return from(authService.getUserProfile(user.uid)).pipe(
+            // Use Observable-based getUserProfile - NO Promise conversion!
+            return authService.getUserProfile(user.uid).pipe(
                 map(profile => {
                     if (profile && profile.role === 'admin') {
                         return true;

@@ -31,7 +31,7 @@ export class LoginPage {
             const user = await this.authService.login(this.email, this.password);
 
             // Step 2: Fetch user profile from Firestore
-            const profile = await this.authService.getUserProfile(user.uid);
+            const profile = await this.authService.getUserProfilePromise(user.uid);
             
             if (!profile) {
                 this.errorMessage = 'User profile not found. Please contact support.';

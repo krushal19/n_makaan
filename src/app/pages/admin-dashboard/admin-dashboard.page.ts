@@ -34,7 +34,7 @@ export class AdminDashboardPage implements OnInit {
         try {
             const user = this.authService.getCurrentUser();
             if (user) {
-                this.userProfile = await this.authService.getUserProfile(user.uid);
+                this.userProfile = await this.authService.getUserProfilePromise(user.uid);
             }
         } catch (error) {
             console.error('Error loading user profile:', error);

@@ -114,13 +114,20 @@ export class CustomerProfileComponent implements OnInit {
     });
   }
 
-  async ngOnInit() {
+  ngOnInit() {
     const user = this.authService.getCurrentUser();
     if (user) {
-      this.userProfile = await this.authService.getUserProfile(user.uid);
-      if (this.userProfile) {
-        this.profileForm.patchValue(this.userProfile);
-      }
+      this.authService.getUserProfile(user.uid).subscribe({
+        next: (profile) => {
+          this.userProfile = profile;
+          if (this.userProfile) {
+            this.profileForm.patchValue(this.userProfile);
+          }
+        },
+        error: (error) => {
+          console.error('Error fetching user profile:', error);
+        }
+      });
     }
   }
 

@@ -12,11 +12,19 @@ import { SellerFooterComponent } from '../seller-footer/seller-footer.component'
   template: `
     <app-seller-header></app-seller-header>
     <app-seller-navbar></app-seller-navbar>
-    <main class="seller-main">
+    <main class="seller-main page-wrapper">
       <router-outlet></router-outlet>
     </main>
     <app-seller-footer></app-seller-footer>
   `,
-  styleUrls: ['./seller-layout.component.scss']
+  styles: [`
+    .page-wrapper {
+      min-height: calc(100vh - 160px);
+      padding-top: 80px; /* Space for fixed navbar */
+    }
+    .seller-main {
+      background-color: #f8f9fa;
+    }
+  `]
 })
 export class SellerLayoutComponent { }

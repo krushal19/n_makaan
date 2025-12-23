@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, from } from 'rxjs';
+import { Observable, from, switchMap } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Firestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, where, orderBy, serverTimestamp } from '@angular/fire/firestore';
 import { AuthService } from '../../services/auth.service';
@@ -31,8 +31,9 @@ export class SellerService {
       throw new Error('User not authenticated');
     }
 
-    return from(this.authService.getUserProfile(user.uid)).pipe(
-      map(userProfile => {
+    // Use Observable-based getUserProfile - NO Promise conversion!
+    return this.authService.getUserProfile(user.uid).pipe(
+      switchMap(userProfile => {
         if (!userProfile) {
           throw new Error('User profile not found');
         }
@@ -44,7 +45,7 @@ export class SellerService {
           createdAt: serverTimestamp() as any
         };
 
-        return addDoc(collection(this.firestore, 'properties'), property);
+        return from(addDoc(collection(this.firestore, 'properties'), property));
       }),
       map((docRef: any) => docRef.id)
     );

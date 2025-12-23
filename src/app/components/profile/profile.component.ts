@@ -35,7 +35,7 @@ export class ProfileComponent implements OnInit {
     try {
       const user = this.authService.getCurrentUser();
       if (user) {
-        this.userProfile = await this.authService.getUserProfile(user.uid);
+        this.userProfile = await this.authService.getUserProfilePromise(user.uid);
         if (this.userProfile) {
           this.profileForm.patchValue({
             displayName: this.userProfile.displayName || '',

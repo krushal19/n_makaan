@@ -1,7 +1,10 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-seller-profile',
+  standalone: true,
+  imports: [CommonModule],
   template: `
     <div class="container-fluid">
       <div class="row">
@@ -18,4 +21,4 @@ import { Component } from '@angular/core';
   `,
   styleUrls: ['./seller-profile.component.scss']
 })
-export class SellerComponentProfile { }
+export class SellerProfileComponent { }

@@ -175,10 +175,17 @@ export class SellerDashboardComponent implements OnInit {
     { title: 'Commercial Space', type: 'Rent', price: '50,000', status: 'Pending' }
   ];
 
-  async ngOnInit() {
+  ngOnInit() {
     const user = this.authService.getCurrentUser();
     if (user) {
-      this.userProfile = await this.authService.getUserProfile(user.uid);
+      this.authService.getUserProfile(user.uid).subscribe({
+        next: (profile) => {
+          this.userProfile = profile;
+        },
+        error: (error) => {
+          console.error('Error fetching user profile:', error);
+        }
+      });
     }
   }
   

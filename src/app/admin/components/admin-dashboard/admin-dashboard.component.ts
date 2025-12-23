@@ -223,10 +223,17 @@ export class AdminDashboardComponent implements OnInit {
     { activity: 'Property Listing Approved', user: 'David Brown', userType: 'Seller', date: '2024-01-13', status: 'Approved' }
   ];
 
-  async ngOnInit() {
+  ngOnInit() {
     const user = this.authService.getCurrentUser();
     if (user) {
-      this.userProfile = await this.authService.getUserProfile(user.uid);
+      this.authService.getUserProfile(user.uid).subscribe({
+        next: (profile) => {
+          this.userProfile = profile;
+        },
+        error: (error) => {
+          console.error('Error fetching user profile:', error);
+        }
+      });
     }
   }
   

@@ -10,30 +10,28 @@ export const adminGuard: CanActivateFn = (route, state) => {
 
   return authService.user$.pipe(
     take(1),
-    switchMap(async (user) => {
+    switchMap((user) => {
       if (!user) {
         router.navigate(['/login']);
-        return false;
+        return of(false);
       }
 
-      try {
-        // Check for hardcoded admin email
-        if (user.email === 'admin@makaan.com') {
-          return true;
-        }
-        
-        const userProfile = await authService.getUserProfile(user.uid);
-        if (userProfile && userProfile.role === 'admin') {
-          return true;
-        } else {
-          router.navigate(['/']);
-          return false;
-        }
-      } catch (error) {
-        console.error('Error checking admin role:', error);
-        router.navigate(['/login']);
-        return false;
+      // Check for hardcoded admin email
+      if (user.email === 'admin@makaan.com') {
+        return of(true);
       }
+      
+      // Use Observable-based getUserProfile - NO Promise conversion!
+      return authService.getUserProfile(user.uid).pipe(
+        map(userProfile => {
+          if (userProfile && userProfile.role === 'admin') {
+            return true;
+          } else {
+            router.navigate(['/']);
+            return false;
+          }
+        })
+      );
     })
   );
 };

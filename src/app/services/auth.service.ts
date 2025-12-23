@@ -1,7 +1,8 @@
 import { Injectable, inject } from '@angular/core';
 import { Auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, user, User } from '@angular/fire/auth';
-import { Firestore, doc, setDoc, getDoc } from '@angular/fire/firestore';
-import { Observable } from 'rxjs';
+import { Firestore, doc, setDoc, docData } from '@angular/fire/firestore';
+import { Observable, of } from 'rxjs';
+import { map, catchError } from 'rxjs/operators';
 import { UserProfile } from '../core/models/user.model';
 
 export type { UserProfile };
@@ -91,26 +92,45 @@ export class AuthService {
     }
   }
 
-  async getUserProfile(uid: string): Promise<UserProfile | null> {
-    try {
-      const docRef = doc(this.firestore, 'users', uid);
-      const docSnap = await getDoc(docRef);
+  // Observable-based method to get user profile - NO PROMISES!
+  getUserProfile(uid: string): Observable<UserProfile | null> {
+    const docRef = doc(this.firestore, 'users', uid);
+    return docData(docRef, { idField: 'uid' }).pipe(
+      map(data => {
+        if (data) {
+          return {
+            uid: data['uid'] || uid,
+            email: data['email'] || '',
+            displayName: data['displayName'] || '',
+            phoneNumber: data['phoneNumber'] || '',
+            role: data['role'] || 'customer',
+            aadhaarNumber: data['aadhaarNumber'] || '',
+            panNumber: data['panNumber'] || '',
+            drivingLicense: data['drivingLicense'] || '',
+            isVerified: data['isVerified'] || false,
+            isBlocked: data['isBlocked'] || false,
+            reportCount: data['reportCount'] || 0,
+            createdAt: data['createdAt'] || new Date(),
+            lastLogin: data['lastLogin'] || new Date()
+          } as UserProfile;
+        }
+        return null;
+      }),
+      catchError(error => {
+        console.error('Error fetching user profile:', error);
+        return of(null);
+      })
+    );
+  }
 
-      if (docSnap.exists()) {
-        const data = docSnap.data();
-        return {
-          uid: data['uid'],
-          email: data['email'],
-          displayName: data['displayName'] || '',
-          phoneNumber: data['phoneNumber'] || '',
-          createdAt: data['createdAt']?.toDate() || new Date()
-        } as UserProfile;
-      }
-      return null;
-    } catch (error) {
-      console.error('Error fetching user profile:', error);
-      throw error;
-    }
+  // Temporary Promise-based method for backward compatibility - WILL BE REMOVED
+  async getUserProfilePromise(uid: string): Promise<UserProfile | null> {
+    return new Promise((resolve, reject) => {
+      this.getUserProfile(uid).subscribe({
+        next: (profile) => resolve(profile),
+        error: (error) => reject(error)
+      });
+    });
   }
 
   getCurrentUser(): User | null {

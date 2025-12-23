@@ -1,7 +1,10 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-verification-center',
+  standalone: true,
+  imports: [CommonModule],
   template: `
     <div class="container-fluid">
       <div class="row">
@@ -18,4 +21,4 @@ import { Component } from '@angular/core';
   `,
   styleUrls: ['./verification-center.component.scss']
 })
-export class VerificationComponentCenter { }
+export class VerificationCenterComponent { }

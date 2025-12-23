@@ -33,7 +33,7 @@ export class HomeComponent implements OnInit {
     this.authService.user$.subscribe(async (user) => {
       if (user) {
         this.isLoggedIn = true;
-        this.userProfile = await this.authService.getUserProfile(user.uid);
+        this.userProfile = await this.authService.getUserProfilePromise(user.uid);
       } else {
         this.isLoggedIn = false;
         this.userProfile = null;

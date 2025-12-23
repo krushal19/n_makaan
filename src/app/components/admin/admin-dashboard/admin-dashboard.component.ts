@@ -50,7 +50,7 @@ export class AdminDashboardComponent implements OnInit {
             createdAt: new Date()
           };
         } else {
-          this.currentAdmin = await this.authService.getUserProfile(user.uid);
+          this.currentAdmin = await this.authService.getUserProfilePromise(user.uid);
         }
       }
     } catch (error) {

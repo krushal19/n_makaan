@@ -12,11 +12,19 @@ import { AdminFooterComponent } from '../admin-footer/admin-footer.component';
   template: `
     <app-admin-header></app-admin-header>
     <app-admin-navbar></app-admin-navbar>
-    <main class="admin-main">
+    <main class="admin-main page-wrapper">
       <router-outlet></router-outlet>
     </main>
     <app-admin-footer></app-admin-footer>
   `,
-  styleUrls: ['./admin-layout.component.scss']
+  styles: [`
+    .page-wrapper {
+      min-height: calc(100vh - 160px);
+      padding-top: 80px; /* Space for fixed navbar */
+    }
+    .admin-main {
+      background-color: #f8f9fa;
+    }
+  `]
 })
 export class AdminLayoutComponent { }

@@ -22,17 +22,20 @@ export class HeaderComponent implements OnInit, OnDestroy {
   private userSub: Subscription | null = null;
 
   ngOnInit() {
-    this.userSub = this.authService.user$.subscribe(async (user) => {
-      try {
-        if (user) {
-          this.user = await this.authService.getUserProfile(user.uid);
-          this.isLoggedIn = true;
-        } else {
-          this.user = null;
-          this.isLoggedIn = false;
-        }
-      } catch (error) {
-        console.error('Error loading user profile in header:', error);
+    this.userSub = this.authService.user$.subscribe((user) => {
+      if (user) {
+        this.authService.getUserProfile(user.uid).subscribe({
+          next: (profile) => {
+            this.user = profile;
+            this.isLoggedIn = true;
+          },
+          error: (error) => {
+            console.error('Error loading user profile in header:', error);
+            this.user = null;
+            this.isLoggedIn = false;
+          }
+        });
+      } else {
         this.user = null;
         this.isLoggedIn = false;
       }
@@ -105,4 +108,3 @@ export class HeaderComponent implements OnInit, OnDestroy {
     }
   }
 }
-

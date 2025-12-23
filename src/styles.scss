@@ -108,3 +108,38 @@
   --light-color: #EFFDF5;
   --dark-color: #0E2E50;
 }
+
+/* CRITICAL FIX: Layout spacing for fixed navbars */
+.page-wrapper {
+  min-height: calc(100vh - 160px);
+  padding-top: 80px; /* Space for fixed navbar */
+}
+
+/* Ensure no navbar duplication */
+.navbar-fixed {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1030;
+}
+
+/* Prevent text hiding behind navbar */
+.content-section {
+  margin-top: 20px;
+}
+
+/* Role-specific layout adjustments */
+.admin-main,
+.seller-main,
+.customer-main {
+  background-color: #f8f9fa;
+  min-height: calc(100vh - 160px);
+}
+
+/* Fix for testimonial and other pages */
+.testimonial-page,
+.about-page,
+.contact-page {
+  padding-top: 0; /* Override default padding for pages with custom headers */
+}

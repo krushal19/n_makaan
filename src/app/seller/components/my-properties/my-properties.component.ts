@@ -1,7 +1,10 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-my-properties',
+  standalone: true,
+  imports: [CommonModule],
   template: `
     <div class="container-fluid">
       <div class="row">
@@ -18,4 +21,4 @@ import { Component } from '@angular/core';
   `,
   styleUrls: ['./my-properties.component.scss']
 })
-export class MyComponentProperties { }
+export class MyPropertiesComponent { }

@@ -45,21 +45,28 @@ export class LoginComponent {
         
         const user = await this.authService.login(email, password);
         
-        // Get user profile to check role
-        const profile = await this.authService.getUserProfile(user.uid);
-
-        // Strict role-based redirect
-        if (profile?.role === 'seller') {
-          this.router.navigate(['/seller']);
-        } else if (profile?.role === 'customer') {
-          this.router.navigate(['/customer']);
-        } else {
-          // Fallback for any other case
-          this.router.navigate(['/']);
-        }
+        // Use Observable-based getUserProfile and subscribe
+        this.authService.getUserProfile(user.uid).subscribe({
+          next: (profile) => {
+            // Strict role-based redirect
+            if (profile?.role === 'seller') {
+              this.router.navigate(['/seller']);
+            } else if (profile?.role === 'customer') {
+              this.router.navigate(['/customer']);
+            } else {
+              // Fallback for any other case
+              this.router.navigate(['/']);
+            }
+            this.isLoading = false;
+          },
+          error: (error) => {
+            console.error('Error fetching user profile:', error);
+            this.router.navigate(['/']);
+            this.isLoading = false;
+          }
+        });
       } catch (error: any) {
         this.errorMessage = this.getErrorMessage(error.code);
-      } finally {
         this.isLoading = false;
       }
     }

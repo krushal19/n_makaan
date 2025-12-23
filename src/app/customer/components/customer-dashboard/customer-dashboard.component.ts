@@ -163,10 +163,17 @@ export class CustomerDashboardComponent implements OnInit {
     { type: 'Profile Updated', property: '-', date: '2024-01-12', status: 'Completed' }
   ];
 
-  async ngOnInit() {
+  ngOnInit() {
     const user = this.authService.getCurrentUser();
     if (user) {
-      this.userProfile = await this.authService.getUserProfile(user.uid);
+      this.authService.getUserProfile(user.uid).subscribe({
+        next: (profile) => {
+          this.userProfile = profile;
+        },
+        error: (error) => {
+          console.error('Error fetching user profile:', error);
+        }
+      });
     }
   }
   
