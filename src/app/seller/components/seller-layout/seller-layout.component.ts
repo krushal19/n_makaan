@@ -1,25 +1,22 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { SellerHeaderComponent } from '../seller-header/seller-header.component';
 import { SellerNavbarComponent } from '../seller-navbar/seller-navbar.component';
+import { SellerFooterComponent } from '../seller-footer/seller-footer.component';
 
 @Component({
   selector: 'app-seller-layout',
   standalone: true,
-  imports: [RouterOutlet, SellerNavbarComponent],
+  imports: [CommonModule, RouterModule, SellerHeaderComponent, SellerNavbarComponent, SellerFooterComponent],
   template: `
+    <app-seller-header></app-seller-header>
     <app-seller-navbar></app-seller-navbar>
-    <main class="seller-main-content">
+    <main class="seller-main">
       <router-outlet></router-outlet>
     </main>
+    <app-seller-footer></app-seller-footer>
   `,
-  styles: [`
-    .seller-main-content {
-      padding: 20px;
-      min-height: calc(100vh - 80px);
-      background-color: #f8f9fa;
-    }
-  `]
+  styleUrls: ['./seller-layout.component.scss']
 })
-export class SellerLayoutComponent {
-
-}
+export class SellerLayoutComponent { }

@@ -1,25 +1,24 @@
 /* Modern Design System - Global Styles */
 
-// Import Google Fonts
+/* Import Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap');
 
-// CSS Variables for Design System
+/* CSS Variables for Design System - GREEN THEME CONSISTENT */
 :root {
-  // Colors
-  --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-  --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-  --warning-gradient: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
-  --danger-gradient: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+  /* Primary Green Theme Colors (Consistent across all panels) */
+  --primary-color: #00B98E;
+  --secondary-color: #FF6922;
+  --light-color: #EFFDF5;
+  --dark-color: #0E2E50;
   
-  --primary-color: #667eea;
-  --secondary-color: #764ba2;
-  --accent-color: #f093fb;
-  --success-color: #4facfe;
-  --warning-color: #43e97b;
-  --danger-color: #fa709a;
+  /* Gradients with green theme */
+  --primary-gradient: linear-gradient(135deg, #00B98E 0%, #00a077 100%);
+  --secondary-gradient: linear-gradient(135deg, #FF6922 0%, #e55a1f 100%);
+  --success-gradient: linear-gradient(135deg, #198754 0%, #157347 100%);
+  --warning-gradient: linear-gradient(135deg, #ffc107 0%, #e0a800 100%);
+  --danger-gradient: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
   
-  // Fixed Colors (All Black Text)
+  /* Fixed Colors (All Black Text) */
   --text-primary: #000000;
   --text-secondary: #333333;
   --text-muted: #666666;
@@ -32,14 +31,14 @@
   --border-color: #dee2e6;
   --border-light: #f1f3f4;
   
-  // Shadows
+  /* Shadows */
   --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
   --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
   --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
   --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.1);
   --shadow-2xl: 0 25px 50px rgba(0, 0, 0, 0.15);
   
-  // Border Radius
+  /* Border Radius */
   --radius-sm: 0.375rem;
   --radius-md: 0.5rem;
   --radius-lg: 0.75rem;
@@ -47,417 +46,65 @@
   --radius-2xl: 1.5rem;
   --radius-full: 9999px;
   
-  // Spacing
+  /* Spacing */
   --space-xs: 0.25rem;
   --space-sm: 0.5rem;
   --space-md: 1rem;
   --space-lg: 1.5rem;
-  --space-xl: 2rem;
-  --space-2xl: 3rem;
-  --space-3xl: 4rem;
+  --space-xl: 3rem;
+  --space-2xl: 6rem;
+}
+
+/* Global Green Theme Overrides */
+.btn-primary {
+  background-color: var(--primary-color) !important;
+  border-color: var(--primary-color) !important;
   
-  // Typography
-  --font-primary: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-secondary: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  
-  // Transitions
-  --transition-fast: 0.15s ease;
-  --transition-normal: 0.3s ease;
-  --transition-slow: 0.5s ease;
+  &:hover, &:focus, &:active {
+    background-color: #00a077 !important;
+    border-color: #00a077 !important;
+  }
 }
 
-// Reset and Base Styles
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+.text-primary {
+  color: var(--primary-color) !important;
 }
 
-html {
-  scroll-behavior: smooth;
-  font-size: 16px;
+.bg-primary {
+  background-color: var(--primary-color) !important;
 }
 
-body {
-  font-family: var(--font-primary);
-  line-height: 1.6;
-  color: var(--text-primary);
-  background-color: var(--bg-secondary);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;
+.border-primary {
+  border-color: var(--primary-color) !important;
 }
 
-// Typography
-h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-secondary);
-  font-weight: 700;
-  line-height: 1.2;
-  margin-bottom: var(--space-md);
-  color: var(--text-primary);
+/* Form controls with green theme */
+.form-control:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 0.25rem rgba(0, 185, 142, 0.25);
 }
 
-h1 { font-size: 3rem; }
-h2 { font-size: 2.5rem; }
-h3 { font-size: 2rem; }
-h4 { font-size: 1.5rem; }
-h5 { font-size: 1.25rem; }
-h6 { font-size: 1rem; }
-
-p {
-  margin-bottom: var(--space-md);
-  color: var(--text-secondary);
+/* Navbar consistent styling */
+.navbar-brand .text-primary {
+  color: var(--primary-color) !important;
 }
 
-a {
+/* Consistent button styling across all panels */
+.btn-outline-primary {
   color: var(--primary-color);
-  text-decoration: none;
-  transition: var(--transition-normal);
+  border-color: var(--primary-color);
   
-  &:hover {
-    color: var(--secondary-color);
-  }
-}
-
-// Modern Button System
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-sm);
-  padding: var(--space-md) var(--space-xl);
-  border: none;
-  border-radius: var(--radius-lg);
-  font-family: var(--font-primary);
-  font-weight: 600;
-  font-size: 0.875rem;
-  text-decoration: none;
-  cursor: pointer;
-  transition: all var(--transition-normal);
-  position: relative;
-  overflow: hidden;
-  
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-    transition: left var(--transition-slow);
-  }
-  
-  &:hover::before {
-    left: 100%;
-  }
-  
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-lg);
-  }
-  
-  &:active {
-    transform: translateY(0);
-  }
-  
-  &.btn-primary {
-    background: var(--primary-gradient);
-    color: white;
-    box-shadow: var(--shadow-md);
-  }
-  
-  &.btn-secondary {
-    background: var(--secondary-gradient);
-    color: white;
-    box-shadow: var(--shadow-md);
-  }
-  
-  &.btn-success {
-    background: var(--success-gradient);
-    color: white;
-    box-shadow: var(--shadow-md);
-  }
-  
-  &.btn-outline {
-    background: transparent;
-    border: 2px solid var(--primary-color);
-    color: var(--primary-color);
-    
-    &:hover {
-      background: var(--primary-color);
-      color: white;
-    }
-  }
-  
-  &.btn-ghost {
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    color: var(--text-primary);
-    border: 1px solid var(--border-color);
-    
-    &:hover {
-      background: rgba(255, 255, 255, 0.2);
-    }
-  }
-  
-  &:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-    transform: none !important;
-  }
-}
-
-// Modern Card System
-.card {
-  background: var(--bg-primary);
-  border-radius: var(--radius-xl);
-  box-shadow: var(--shadow-md);
-  padding: var(--space-xl);
-  transition: all var(--transition-normal);
-  border: 1px solid var(--border-light);
-  color: var(--text-primary);
-  
-  &:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-xl);
-  }
-  
-  &.card-gradient {
-    background: var(--primary-gradient);
-    color: white;
-    
-    h1, h2, h3, h4, h5, h6, p {
-      color: white;
-    }
-  }
-}
-
-// Form Elements
-.form-group {
-  margin-bottom: var(--space-lg);
-}
-
-.form-label {
-  display: block;
-  margin-bottom: var(--space-sm);
-  font-weight: 600;
-  color: var(--text-primary);
-  font-size: 0.875rem;
-}
-
-.form-control {
-  width: 100%;
-  padding: var(--space-md);
-  border: 2px solid var(--border-color);
-  border-radius: var(--radius-lg);
-  font-family: var(--font-primary);
-  font-size: 1rem;
-  transition: all var(--transition-normal);
-  background: var(--bg-primary);
-  color: var(--text-primary);
-  
-  &:focus {
-    outline: none;
+  &:hover, &:focus, &:active {
+    background-color: var(--primary-color);
     border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-    transform: translateY(-1px);
-  }
-  
-  &.is-invalid {
-    border-color: var(--danger-color);
-  }
-  
-  &::placeholder {
-    color: var(--text-light);
+    color: white;
   }
 }
 
-// Animations
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes fadeInLeft {
-  from {
-    opacity: 0;
-    transform: translateX(-30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-@keyframes fadeInRight {
-  from {
-    opacity: 0;
-    transform: translateX(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-@keyframes pulse {
-  0%, 100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.05);
-  }
-}
-
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
-}
-
-// Animation Classes
-.animate-fade-in-up {
-  animation: fadeInUp 0.6s ease-out;
-}
-
-.animate-fade-in-left {
-  animation: fadeInLeft 0.6s ease-out;
-}
-
-.animate-fade-in-right {
-  animation: fadeInRight 0.6s ease-out;
-}
-
-.animate-pulse {
-  animation: pulse 2s infinite;
-}
-
-.animate-float {
-  animation: float 3s ease-in-out infinite;
-}
-
-// Utility Classes
-.text-gradient {
-  background: var(--primary-gradient);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-
-
-
-
-.glass-effect {
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.container-modern {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 var(--space-xl);
-}
-
-// Navbar Specific Styles
-.modern-navbar {
-  position: relative !important;
-  z-index: 1050 !important;
-  
-  &.sticky {
-    position: fixed !important;
-    top: 0 !important;
-    width: 100% !important;
-    z-index: 1050 !important;
-  }
-}
-
-app-header {
-  display: block !important;
-  width: 100% !important;
-  position: relative !important;
-  z-index: 1050 !important;
-}
-
-.header {
-  margin-top: 0 !important;
-  padding-top: var(--space-xl) !important;
-}
-
-// Mobile Responsive
-@media (max-width: 768px) {
-  body.mobile-menu-open {
-    overflow: hidden;
-  }
-  
-  h1 { font-size: 2rem; }
-  h2 { font-size: 1.75rem; }
-  h3 { font-size: 1.5rem; }
-  
-  .container-modern {
-    padding: 0 var(--space-md);
-  }
-}
-
-// Loading States
-.loading {
-  position: relative;
-  
-  &::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 20px;
-    height: 20px;
-    margin: -10px 0 0 -10px;
-    border: 2px solid var(--border-color);
-    border-top-color: var(--primary-color);
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-  }
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-// Scrollbar Styling
-::-webkit-scrollbar {
-  width: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: var(--bg-tertiary);
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--primary-gradient);
-  border-radius: var(--radius-full);
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--secondary-color);
-}
-
-.navbar-brand {
-  color: #007bff !important;
-  
-  &:hover,
-  &:focus {
-    color: #0056b3 !important;
-  }
+/* Ensure all panels use the same green theme */
+.customer-main, .seller-main, .admin-main {
+  --primary-color: #00B98E;
+  --secondary-color: #FF6922;
+  --light-color: #EFFDF5;
+  --dark-color: #0E2E50;
 }

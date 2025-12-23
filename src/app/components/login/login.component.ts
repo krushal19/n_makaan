@@ -35,23 +35,27 @@ export class LoginComponent {
 
       try {
         const { email, password } = this.loginForm.value;
+        
+        // Block admin credentials from normal login
+        if (email === 'admin@makaan.com') {
+          this.errorMessage = 'Admin login is restricted. Please use the admin portal.';
+          this.isLoading = false;
+          return;
+        }
+        
         const user = await this.authService.login(email, password);
         
-        // Check for hardcoded admin or get user profile
-        if (user.email === 'admin@makaan.com') {
-          this.router.navigate(['/admin']);
-        } else {
-          // Get user profile to check role
-          const profile = await this.authService.getUserProfile(user.uid);
+        // Get user profile to check role
+        const profile = await this.authService.getUserProfile(user.uid);
 
-          // Redirect based on role
-          if (profile?.role === 'admin') {
-            this.router.navigate(['/admin']);
-          } else if (profile?.role === 'seller') {
-            this.router.navigate(['/seller']);
-          } else {
-            this.router.navigate(['/home']);
-          }
+        // Strict role-based redirect
+        if (profile?.role === 'seller') {
+          this.router.navigate(['/seller']);
+        } else if (profile?.role === 'customer') {
+          this.router.navigate(['/customer']);
+        } else {
+          // Fallback for any other case
+          this.router.navigate(['/']);
         }
       } catch (error: any) {
         this.errorMessage = this.getErrorMessage(error.code);

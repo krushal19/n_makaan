@@ -1,0 +1,28 @@
+/* Customer Profile - Green Theme */
+.btn-primary {
+  background-color: #00B98E;
+  border-color: #00B98E;
+  
+  &:hover {
+    background-color: #00a077;
+    border-color: #00a077;
+  }
+}
+
+.form-control {
+  &:focus {
+    border-color: #00B98E;
+    box-shadow: 0 0 0 0.25rem rgba(0, 185, 142, 0.25);
+  }
+}
+
+.badge {
+  &.bg-success {
+    background-color: #198754 !important;
+  }
+  
+  &.bg-warning {
+    background-color: #ffc107 !important;
+    color: #000;
+  }
+}

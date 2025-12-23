@@ -1,0 +1,14 @@
+/* Customer Layout Styles - Green Theme */
+.customer-main {
+  min-height: calc(100vh - 200px);
+  background-color: #f8f9fa;
+  padding: 20px 0;
+}
+
+/* Ensure consistent green theme */
+:host {
+  --primary-color: #00B98E;
+  --secondary-color: #FF6922;
+  --light-color: #EFFDF5;
+  --dark-color: #0E2E50;
+}

@@ -1,0 +1,20 @@
+/* Customer Management - Green Theme */
+.btn-primary {
+  background-color: #00B98E;
+  border-color: #00B98E;
+  
+  &:hover {
+    background-color: #00a077;
+    border-color: #00a077;
+  }
+}
+
+.btn-outline-primary {
+  color: #00B98E;
+  border-color: #00B98E;
+  
+  &:hover {
+    background-color: #00B98E;
+    border-color: #00B98E;
+  }
+}

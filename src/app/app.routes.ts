@@ -10,19 +10,12 @@ import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { ProfileComponent } from './components/profile/profile.component';
-import { AdminDashboardComponent } from './components/admin/admin-dashboard/admin-dashboard.component';
-import { AdminInfoComponent } from './components/admin-info/admin-info.component';
-import { CreateAdminComponent } from './utils/create-admin.component';
-import { AdminLayoutComponent } from './components/shared/admin-layout/admin-layout.component';
-import { CustomerDashboardPage } from './pages/customer-dashboard/customer-dashboard.page';
-import { SellerDashboardPage } from './pages/seller-dashboard/seller-dashboard.page';
-import { AdminDashboardPage } from './pages/admin-dashboard/admin-dashboard.page';
-import { PropertiesPage } from './pages/properties/properties.page';
 import { CustomerLayoutComponent } from './components/shared/customer-layout/customer-layout.component';
 import { authGuard, redirectIfAuthenticatedGuard } from './guards/auth.guard';
-import { adminGuard, sellerGuard, customerGuard, homeGuard, sellerOnlyGuard } from './guards/role.guards';
+import { adminOnlyGuard, sellerOnlyGuard, customerGuard, homeGuard, blockAdminUrlGuard } from './guards/role.guards';
 
 export const routes: Routes = [
+    // Public routes with customer layout
     {
         path: '',
         component: CustomerLayoutComponent,
@@ -54,70 +47,81 @@ export const routes: Routes = [
                 canActivate: [redirectIfAuthenticatedGuard]
             },
 
-            // Protected Dashboard
+            // Protected Dashboard (legacy)
             {
                 path: 'dashboard',
                 component: DashboardComponent,
                 canActivate: [authGuard]
             },
 
-            // Protected Profile
+            // Protected Profile (legacy)
             {
                 path: 'profile',
                 component: ProfileComponent,
                 canActivate: [authGuard]
             },
 
-
-
-            // Legacy Dashboards (if needed)
-            {
-                path: 'customer-dashboard',
-                component: CustomerDashboardPage,
-                canActivate: [customerGuard]
-            },
-            {
-                path: 'seller-dashboard',
-                component: SellerDashboardPage,
-                canActivate: [sellerGuard]
-            },
-            {
-                path: 'admin-dashboard',
-                component: AdminDashboardPage,
-                canActivate: [authGuard]
-            },
-
-            // Demo Property CRUD
-            { path: 'demo-properties', component: PropertiesPage },
-
-            // Admin Info & Creation Utility
-            { path: 'admin-info', component: AdminInfoComponent },
-            { path: 'create-admin', component: CreateAdminComponent },
-
-            // Catch all
+            // Catch all for customer layout
             { path: '404', component: HomeComponent },
         ]
     },
 
-    // Seller Module (separate layout) - Strict seller-only access
+    // Customer Panel - Simple routing without modules for now
     {
-        path: 'seller',
-        loadChildren: () => import('./seller/seller.module').then(m => m.SellerModule),
-        canActivate: [sellerOnlyGuard]
-    },
-
-    // Admin Module (separate layout) - Strict admin-only access
-    {
-        path: 'admin',
-        component: AdminLayoutComponent,
-        canActivate: [adminGuard],
+        path: 'customer',
+        canActivate: [customerGuard],
         children: [
-            { path: '', component: AdminDashboardComponent },
-            { path: 'dashboard', component: AdminDashboardComponent },
-            // Add more admin routes here as needed
+            { 
+                path: '', 
+                loadComponent: () => import('./customer/components/customer-dashboard/customer-dashboard.component').then(m => m.CustomerDashboardComponent) 
+            },
+            { 
+                path: 'dashboard', 
+                loadComponent: () => import('./customer/components/customer-dashboard/customer-dashboard.component').then(m => m.CustomerDashboardComponent) 
+            }
         ]
     },
 
-    // Global catch all
-    { path: '**', redirectTo: '' }
+    // Seller Panel - Simple routing without modules for now  
+    {
+        path: 'seller',
+        canActivate: [sellerOnlyGuard],
+        children: [
+            { 
+                path: '', 
+                loadComponent: () => import('./seller/components/seller-dashboard/seller-dashboard.component').then(m => m.SellerDashboardComponent) 
+            },
+            { 
+                path: 'dashboard', 
+                loadComponent: () => import('./seller/components/seller-dashboard/seller-dashboard.component').then(m => m.SellerDashboardComponent) 
+            }
+        ]
+    },
+
+    // Admin Panel - Simple routing without modules for now
+    {
+        path: 'admin',
+        canActivate: [adminOnlyGuard],
+        children: [
+            { 
+                path: 'login', 
+                loadComponent: () => import('./admin/components/admin-login/admin-login.component').then(m => m.AdminLoginComponent) 
+            },
+            { 
+                path: '', 
+                loadComponent: () => import('./admin/components/admin-dashboard/admin-dashboard.component').then(m => m.AdminDashboardComponent) 
+            },
+            { 
+                path: 'dashboard', 
+                loadComponent: () => import('./admin/components/admin-dashboard/admin-dashboard.component').then(m => m.AdminDashboardComponent) 
+            }
+        ]
+    },
+
+    // Block any other admin URL attempts
+    {
+        path: '**',
+        canActivate: [blockAdminUrlGuard],
+        redirectTo: ''
+    }
 ];

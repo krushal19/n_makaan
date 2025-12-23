@@ -1,0 +1,13 @@
+/* Customer Header - Green Theme */
+.bg-primary {
+  background-color: #00B98E !important;
+}
+
+.btn-outline-light {
+  border-color: rgba(255, 255, 255, 0.5);
+  
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-color: #fff;
+  }
+}

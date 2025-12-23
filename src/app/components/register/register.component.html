@@ -141,6 +141,30 @@
         </div>
 
         <div class="form-group">
+          <label for="aadhaarNumber" class="form-label">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="2" y="3" width="20" height="14" rx="2" ry="2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <line x1="8" y1="21" x2="16" y2="21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <line x1="12" y1="17" x2="12" y2="21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Aadhaar Number
+          </label>
+          <input 
+            type="text" 
+            id="aadhaarNumber" 
+            formControlName="aadhaarNumber"
+            class="form-control"
+            placeholder="Enter your 12-digit Aadhaar number"
+            maxlength="12"
+            [class.is-invalid]="registerForm.get('aadhaarNumber')?.invalid && registerForm.get('aadhaarNumber')?.touched"
+          >
+          <div class="invalid-feedback" *ngIf="registerForm.get('aadhaarNumber')?.invalid && registerForm.get('aadhaarNumber')?.touched">
+            <span *ngIf="registerForm.get('aadhaarNumber')?.errors?.['required']">Aadhaar number is required</span>
+            <span *ngIf="registerForm.get('aadhaarNumber')?.errors?.['pattern']">Please enter a valid 12-digit Aadhaar number</span>
+          </div>
+        </div>
+
+        <div class="form-group">
           <label for="role" class="form-label">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M17 21V19A4 4 0 0 0 13 15H5A4 4 0 0 0 1 19V21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>

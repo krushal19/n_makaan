@@ -15,7 +15,7 @@ export class AuthService {
 
   user$ = user(this.auth);
 
-  async register(email: string, password: string, displayName?: string, role: 'customer' | 'seller' | 'admin' = 'customer'): Promise<User> {
+  async register(email: string, password: string, displayName?: string, role: 'customer' | 'seller' | 'admin' = 'customer', aadhaarNumber?: string): Promise<User> {
     try {
       const credential = await createUserWithEmailAndPassword(this.auth, email, password);
 
@@ -25,7 +25,12 @@ export class AuthService {
         email: credential.user.email!,
         displayName: displayName || '',
         role: role,
-        createdAt: new Date()
+        aadhaarNumber: aadhaarNumber || '',
+        isVerified: false,
+        isBlocked: false,
+        reportCount: 0,
+        createdAt: new Date(),
+        lastLogin: new Date()
       };
 
       await setDoc(doc(this.firestore, 'users', credential.user.uid), userProfile);

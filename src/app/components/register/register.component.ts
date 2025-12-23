@@ -28,6 +28,7 @@ export class RegisterComponent {
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       confirmPassword: ['', [Validators.required]],
+      aadhaarNumber: ['', [Validators.required, Validators.pattern(/^\d{12}$/)]],
       role: ['customer', [Validators.required]]
     }, { validators: this.passwordMatchValidator });
   }
@@ -53,10 +54,23 @@ export class RegisterComponent {
       this.errorMessage = '';
 
       try {
-        const { email, password, displayName, role } = this.registerForm.value;
+        const { email, password, displayName, role, aadhaarNumber } = this.registerForm.value;
 
-        await this.authService.register(email, password, displayName, role);
-        this.router.navigate(['/home']);
+        // Block admin role registration
+        if (role === 'admin') {
+          this.errorMessage = 'Admin registration is not allowed through this form.';
+          this.isLoading = false;
+          return;
+        }
+
+        await this.authService.register(email, password, displayName, role, aadhaarNumber);
+        
+        // Redirect based on role
+        if (role === 'seller') {
+          this.router.navigate(['/seller']);
+        } else {
+          this.router.navigate(['/customer']);
+        }
       } catch (error: any) {
         this.errorMessage = this.getErrorMessage(error.code);
       } finally {

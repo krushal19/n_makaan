@@ -1,0 +1,51 @@
+/* Seller Dashboard - Green Theme */
+.bg-primary {
+  background-color: #00B98E !important;
+}
+
+.text-primary {
+  color: #00B98E !important;
+}
+
+.btn-primary {
+  background-color: #00B98E;
+  border-color: #00B98E;
+  
+  &:hover {
+    background-color: #00a077;
+    border-color: #00a077;
+  }
+}
+
+.btn-outline-primary {
+  color: #00B98E;
+  border-color: #00B98E;
+  
+  &:hover {
+    background-color: #00B98E;
+    border-color: #00B98E;
+  }
+}
+
+.shadow-sm {
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075) !important;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+  background-color: rgba(0, 185, 142, 0.05);
+}
+
+.badge {
+  &.bg-success {
+    background-color: #198754 !important;
+  }
+  
+  &.bg-warning {
+    background-color: #ffc107 !important;
+    color: #000;
+  }
+  
+  &.bg-primary {
+    background-color: #00B98E !important;
+  }
+}
