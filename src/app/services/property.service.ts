@@ -1,49 +1,100 @@
 import { Injectable, inject } from '@angular/core';
-import { Firestore, collection, addDoc, collectionData, doc, docData, updateDoc, deleteDoc } from '@angular/fire/firestore';
+import { Firestore, collection, addDoc, doc, updateDoc, deleteDoc, query, where, orderBy, collectionData, Timestamp } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
+import { Property } from '../core/models/user.model';
 
-export interface Property {
-    id?: string;
-    title: string;
-    price: number;
-    location: string;
-}
+// Re-export Property interface for convenience
+export type { Property } from '../core/models/user.model';
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root'
 })
 export class PropertyService {
-    private firestore: Firestore = inject(Firestore); // Inject Firestore
+  private firestore = inject(Firestore);
 
-    constructor() { }
+  // Create a new property
+  async createProperty(propertyData: Partial<Property>): Promise<string> {
+    try {
+      console.log('🔥 FIRESTORE WRITE - Creating property in properties collection:', propertyData);
+      
+      // MANDATORY: Ensure all required fields are present
+      const property = {
+        ...propertyData,
+        isActive: true,
+        isVerified: false,
+        createdAt: Timestamp.now(),
+        updatedAt: Timestamp.now()
+      };
 
-    // Get all properties
-    getProperties(): Observable<Property[]> {
-        const propertiesCollection = collection(this.firestore, 'properties');
-        return collectionData(propertiesCollection, { idField: 'id' }) as Observable<Property[]>;
+      console.log('🔥 FIRESTORE WRITE - Writing property document to properties collection:', property);
+      
+      // CRITICAL: This addDoc() call creates the 'properties' collection in Firestore
+      const docRef = await addDoc(collection(this.firestore, 'properties'), property);
+      
+      console.log('🔥 FIRESTORE SUCCESS - Property created with ID:', docRef.id);
+      console.log('🔥 FIRESTORE SUCCESS - Collection "properties" should now be visible in Firebase Console');
+      
+      return docRef.id;
+    } catch (error) {
+      console.error('🔥 FIRESTORE ERROR - Property creation failed:', error);
+      throw error;
     }
+  }
 
-    // Get single property by ID
-    getPropertyById(id: string): Observable<Property> {
-        const propertyDocRef = doc(this.firestore, `properties/${id}`);
-        return docData(propertyDocRef, { idField: 'id' }) as Observable<Property>;
-    }
+  // Get all properties
+  getAllProperties(): Observable<Property[]> {
+    const propertiesRef = collection(this.firestore, 'properties');
+    const q = query(propertiesRef, orderBy('createdAt', 'desc'));
+    return collectionData(q, { idField: 'id' }) as Observable<Property[]>;
+  }
 
-    // Add new property
-    addProperty(property: Property) {
-        const propertiesCollection = collection(this.firestore, 'properties');
-        return addDoc(propertiesCollection, property);
-    }
+  // Get properties by seller
+  getPropertiesBySeller(sellerId: string): Observable<Property[]> {
+    const propertiesRef = collection(this.firestore, 'properties');
+    const q = query(propertiesRef, where('sellerId', '==', sellerId), orderBy('createdAt', 'desc'));
+    return collectionData(q, { idField: 'id' }) as Observable<Property[]>;
+  }
 
-    // Update property
-    updateProperty(id: string, data: any) {
-        const propertyDocRef = doc(this.firestore, `properties/${id}`);
-        return updateDoc(propertyDocRef, data);
+  // Update property
+  async updateProperty(propertyId: string, updates: Partial<Property>): Promise<void> {
+    try {
+      const propertyRef = doc(this.firestore, 'properties', propertyId);
+      await updateDoc(propertyRef, {
+        ...updates,
+        updatedAt: Timestamp.now()
+      });
+      console.log('🔍 PROPERTY SERVICE - Property updated:', propertyId);
+    } catch (error) {
+      console.error('🔍 PROPERTY SERVICE - Error updating property:', error);
+      throw error;
     }
+  }
 
-    // Delete property
-    deleteProperty(id: string) {
-        const propertyDocRef = doc(this.firestore, `properties/${id}`);
-        return deleteDoc(propertyDocRef);
+  // Delete property
+  async deleteProperty(propertyId: string): Promise<void> {
+    try {
+      const propertyRef = doc(this.firestore, 'properties', propertyId);
+      await deleteDoc(propertyRef);
+      console.log('🔍 PROPERTY SERVICE - Property deleted:', propertyId);
+    } catch (error) {
+      console.error('🔍 PROPERTY SERVICE - Error deleting property:', error);
+      throw error;
     }
+  }
+
+  // Verify property
+  async verifyProperty(propertyId: string, isVerified: boolean): Promise<void> {
+    try {
+      const propertyRef = doc(this.firestore, 'properties', propertyId);
+      await updateDoc(propertyRef, {
+        isVerified,
+        verifiedAt: isVerified ? Timestamp.now() : null,
+        updatedAt: Timestamp.now()
+      });
+      console.log('🔍 PROPERTY SERVICE - Property verification updated:', propertyId, isVerified);
+    } catch (error) {
+      console.error('🔍 PROPERTY SERVICE - Error updating property verification:', error);
+      throw error;
+    }
+  }
 }

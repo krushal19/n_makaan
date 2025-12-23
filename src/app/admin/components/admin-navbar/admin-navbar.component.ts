@@ -57,6 +57,14 @@ import { AuthService } from '../../../services/auth.service';
               </div>
             </div>
             
+            <a routerLink="/admin/profile" routerLinkActive="active" class="nav-item nav-link">
+              <i class="fa fa-user me-2"></i>Profile
+            </a>
+            
+            <a routerLink="/admin/user-management" routerLinkActive="active" class="nav-item nav-link">
+              <i class="fa fa-user-plus me-2"></i>Add Users
+            </a>
+            
             <button (click)="logout()" class="nav-item nav-link btn btn-link text-danger">
               <i class="fa fa-sign-out-alt me-2"></i>Logout
             </button>

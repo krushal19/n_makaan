@@ -17,7 +17,7 @@ import { authGuard, redirectIfAuthenticatedGuard } from './guards/auth.guard';
 import { adminOnlyGuard, sellerOnlyGuard, customerGuard, homeGuard, blockAdminUrlGuard } from './guards/role.guards';
 
 export const routes: Routes = [
-    // Public routes with customer layout
+    // Public routes with customer layout (home for customers)
     {
         path: '',
         component: CustomerLayoutComponent,
@@ -33,6 +33,7 @@ export const routes: Routes = [
                     { path: 'list', component: PropertyListComponent },
                     { path: 'type', component: PropertyTypeComponent },
                     { path: 'agent', component: PropertyAgentComponent },
+                    { path: ':id', component: PropertyListComponent }, // Property details
                 ]
             },
             { path: 'testimonial', component: TestimonialComponent },
@@ -49,18 +50,21 @@ export const routes: Routes = [
                 canActivate: [redirectIfAuthenticatedGuard]
             },
 
-            // Protected Dashboard (legacy)
-            {
-                path: 'dashboard',
-                component: DashboardComponent,
-                canActivate: [authGuard]
+            // Customer-specific routes (when logged in as customer)
+            { 
+                path: 'dashboard', 
+                loadComponent: () => import('./customer/components/customer-dashboard/customer-dashboard.component').then(m => m.CustomerDashboardComponent),
+                canActivate: [customerGuard]
             },
-
-            // Protected Profile (legacy)
-            {
-                path: 'profile',
-                component: ProfileComponent,
-                canActivate: [authGuard]
+            { 
+                path: 'profile', 
+                loadComponent: () => import('./customer/components/customer-profile/customer-profile.component').then(m => m.CustomerProfileComponent),
+                canActivate: [customerGuard]
+            },
+            { 
+                path: 'wishlist', 
+                loadComponent: () => import('./customer/components/customer-profile/customer-profile.component').then(m => m.CustomerProfileComponent),
+                canActivate: [customerGuard]
             },
 
             // Catch all for customer layout
@@ -68,28 +72,7 @@ export const routes: Routes = [
         ]
     },
 
-    // Customer Panel - WITH PROPER LAYOUT
-    {
-        path: 'customer',
-        component: CustomerLayoutComponent,
-        canActivate: [customerGuard],
-        children: [
-            { 
-                path: '', 
-                loadComponent: () => import('./customer/components/customer-dashboard/customer-dashboard.component').then(m => m.CustomerDashboardComponent) 
-            },
-            { 
-                path: 'dashboard', 
-                loadComponent: () => import('./customer/components/customer-dashboard/customer-dashboard.component').then(m => m.CustomerDashboardComponent) 
-            },
-            { 
-                path: 'profile', 
-                loadComponent: () => import('./customer/components/customer-profile/customer-profile.component').then(m => m.CustomerProfileComponent) 
-            }
-        ]
-    },
-
-    // Seller Panel - WITH PROPER LAYOUT
+    // Seller Panel - Separate routing structure
     {
         path: 'seller',
         component: SellerLayoutComponent,
@@ -97,23 +80,24 @@ export const routes: Routes = [
         children: [
             { 
                 path: '', 
-                loadComponent: () => import('./seller/components/seller-dashboard/seller-dashboard.component').then(m => m.SellerDashboardComponent) 
+                redirectTo: 'dashboard',
+                pathMatch: 'full'
             },
             { 
                 path: 'dashboard', 
                 loadComponent: () => import('./seller/components/seller-dashboard/seller-dashboard.component').then(m => m.SellerDashboardComponent) 
             },
             { 
+                path: 'properties', 
+                loadComponent: () => import('./seller/components/my-properties/my-properties.component').then(m => m.MyPropertiesComponent) 
+            },
+            { 
                 path: 'add-property', 
                 loadComponent: () => import('./seller/components/add-property/add-property.component').then(m => m.AddPropertyComponent) 
             },
             { 
-                path: 'my-properties', 
-                loadComponent: () => import('./seller/components/my-properties/my-properties.component').then(m => m.MyPropertiesComponent) 
-            },
-            { 
-                path: 'my-customers', 
-                loadComponent: () => import('./seller/components/my-customers/my-customers.component').then(m => m.MyCustomersComponent) 
+                path: 'edit-property/:id', 
+                loadComponent: () => import('./seller/components/add-property/add-property.component').then(m => m.AddPropertyComponent) 
             },
             { 
                 path: 'profile', 
@@ -122,7 +106,7 @@ export const routes: Routes = [
         ]
     },
 
-    // Admin Panel - WITH PROPER LAYOUT AND SPECIAL LOGIN HANDLING
+    // Admin Panel - Special login handling
     {
         path: 'admin/login',
         loadComponent: () => import('./admin/components/admin-login/admin-login.component').then(m => m.AdminLoginComponent)
@@ -134,23 +118,36 @@ export const routes: Routes = [
         children: [
             { 
                 path: '', 
-                loadComponent: () => import('./admin/components/admin-dashboard/admin-dashboard.component').then(m => m.AdminDashboardComponent) 
+                redirectTo: 'dashboard',
+                pathMatch: 'full'
             },
             { 
                 path: 'dashboard', 
                 loadComponent: () => import('./admin/components/admin-dashboard/admin-dashboard.component').then(m => m.AdminDashboardComponent) 
             },
             { 
-                path: 'customer-management', 
+                path: 'customers', 
                 loadComponent: () => import('./admin/components/customer-management/customer-management.component').then(m => m.CustomerManagementComponent) 
             },
             { 
-                path: 'seller-management', 
+                path: 'sellers', 
                 loadComponent: () => import('./admin/components/seller-management/seller-management.component').then(m => m.SellerManagementComponent) 
             },
             { 
-                path: 'verification-center', 
+                path: 'reports', 
                 loadComponent: () => import('./admin/components/verification-center/verification-center.component').then(m => m.VerificationCenterComponent) 
+            },
+            { 
+                path: 'blocked-users', 
+                loadComponent: () => import('./admin/components/customer-management/customer-management.component').then(m => m.CustomerManagementComponent) 
+            },
+            { 
+                path: 'profile', 
+                loadComponent: () => import('./admin/components/admin-profile/admin-profile.component').then(m => m.AdminProfileComponent) 
+            },
+            { 
+                path: 'user-management', 
+                loadComponent: () => import('./admin/components/user-management/user-management.component').then(m => m.UserManagementComponent) 
             }
         ]
     },

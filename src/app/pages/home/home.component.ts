@@ -4,6 +4,8 @@ import { RouterLink } from '@angular/router';
 import { ApiService } from '../../services/api.service';
 import { AuthService } from '../../services/auth.service';
 import { UserProfile } from '../../core/models/user.model';
+import { switchMap } from 'rxjs/operators';
+import { of } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -29,15 +31,19 @@ export class HomeComponent implements OnInit {
       this.testimonials = data || [];
     });
 
-    // Check if user is logged in
-    this.authService.user$.subscribe(async (user) => {
-      if (user) {
-        this.isLoggedIn = true;
-        this.userProfile = await this.authService.getUserProfilePromise(user.uid);
-      } else {
-        this.isLoggedIn = false;
-        this.userProfile = null;
-      }
+    // Check if user is logged in and get profile
+    this.authService.user$.pipe(
+      switchMap(user => {
+        if (user) {
+          this.isLoggedIn = true;
+          return this.authService.getUserProfile(user.uid);
+        } else {
+          this.isLoggedIn = false;
+          return of(null);
+        }
+      })
+    ).subscribe(profile => {
+      this.userProfile = profile;
     });
   }
 }

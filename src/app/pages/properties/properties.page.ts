@@ -2,7 +2,8 @@ import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Observable } from 'rxjs';
-import { PropertyService, Property } from '../../services/property.service';
+import { PropertyService } from '../../services/property.service';
+import { Property } from '../../core/models/user.model';
 
 @Component({
     selector: 'app-properties',
@@ -22,20 +23,20 @@ export class PropertiesPage implements OnInit {
 
     properties$: Observable<Property[]> | null = null;
 
-    newProperty: Property = {
+    newProperty: Partial<Property> = {
         title: '',
         price: 0,
         location: ''
     };
 
     ngOnInit() {
-        this.properties$ = this.propertyService.getProperties();
+        this.properties$ = this.propertyService.getAllProperties();
     }
 
     async addProperty() {
         if (!this.newProperty.title || !this.newProperty.location) return;
         try {
-            await this.propertyService.addProperty(this.newProperty);
+            await this.propertyService.createProperty(this.newProperty);
             this.newProperty = { title: '', price: 0, location: '' }; // Reset form
             alert('Property added successfully!');
         } catch (e) {

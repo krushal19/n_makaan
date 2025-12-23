@@ -22,20 +22,25 @@ export class HeaderComponent implements OnInit, OnDestroy {
   private userSub: Subscription | null = null;
 
   ngOnInit() {
+    console.log('🔍 HEADER COMPONENT - ngOnInit called');
     this.userSub = this.authService.user$.subscribe((user) => {
+      console.log('🔍 HEADER COMPONENT - Auth user changed:', user?.email || 'No user');
       if (user) {
+        console.log('🔍 HEADER COMPONENT - Fetching profile for UID:', user.uid);
         this.authService.getUserProfile(user.uid).subscribe({
           next: (profile) => {
+            console.log('🔍 HEADER COMPONENT - Profile received:', profile);
             this.user = profile;
             this.isLoggedIn = true;
           },
           error: (error) => {
-            console.error('Error loading user profile in header:', error);
+            console.error('🔍 HEADER COMPONENT - Error loading user profile:', error);
             this.user = null;
             this.isLoggedIn = false;
           }
         });
       } else {
+        console.log('🔍 HEADER COMPONENT - No user, clearing profile');
         this.user = null;
         this.isLoggedIn = false;
       }
@@ -96,6 +101,27 @@ export class HeaderComponent implements OnInit, OnDestroy {
     if (typeof document !== 'undefined') {
       document.body.classList.remove('mobile-menu-open');
     }
+  }
+
+  getUserDisplayName(): string {
+    console.log('🔍 HEADER - Getting display name for user:', this.user);
+    
+    // First priority: displayName if it exists and is not empty
+    if (this.user?.displayName && this.user.displayName.trim() !== '') {
+      console.log('🔍 HEADER - Using displayName:', this.user.displayName);
+      return this.user.displayName.trim();
+    }
+    
+    // Second priority: extract name from email
+    if (this.user?.email && this.user.email.trim() !== '') {
+      const emailName = this.user.email.split('@')[0];
+      console.log('🔍 HEADER - Using email prefix:', emailName);
+      return emailName;
+    }
+    
+    // Last resort: Guest (should never show "USER")
+    console.log('🔍 HEADER - Fallback to Guest');
+    return 'Guest';
   }
 
   showDropdown(dropdown: string) {

@@ -52,7 +52,7 @@
                  (mouseenter)="showDropdown('user')" (mouseleave)="hideDropdown('user')">
                 <a href="#" class="nav-link user-trigger">
                     <span class="user-icon">👤</span>
-                    <span class="user-name">{{ user?.displayName || 'USER' }}</span>
+                    <span class="user-name">{{ getUserDisplayName() }}</span>
                     <i class="dropdown-arrow">▼</i>
                 </a>
                 <div class="dropdown-menu user-menu" [class.show]="activeDropdown === 'user'">

@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Makaan System Testing Dashboard</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+        h1 {
+            color: #00B98E;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .test-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #fafafa;
+        }
+        .test-section h2 {
+            color: #333;
+            margin-top: 0;
+            border-bottom: 2px solid #00B98E;
+            padding-bottom: 10px;
+        }
+        .test-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            margin: 5px 0;
+            background: white;
+            border-radius: 5px;
+            border-left: 4px solid #00B98E;
+        }
+        .test-item.priority-1 { border-left-color: #dc3545; }
+        .test-item.priority-2 { border-left-color: #fd7e14; }
+        .test-item.priority-3 { border-left-color: #ffc107; }
+        .test-item.priority-4 { border-left-color: #28a745; }
+        
+        .test-description {
+            flex: 1;
+            margin-right: 15px;
+        }
+        .test-title {
+            font-weight: bold;
+            color: #333;
+        }
+        .test-details {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 5px;
+        }
+        .test-button {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s;
+        }
+        .btn-primary { background: #00B98E; color: white; }
+        .btn-secondary { background: #6c757d; color: white; }
+        .btn-danger { background: #dc3545; color: white; }
+        .btn-warning { background: #ffc107; color: black; }
+        
+        .test-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        .status-indicator {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            margin-left: 10px;
+            display: inline-block;
+        }
+        .status-pending { background: #ffc107; }
+        .status-success { background: #28a745; }
+        .status-failed { background: #dc3545; }
+        
+        .credentials {
+            background: #e9ecef;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-family: monospace;
+        }
+        
+        .server-status {
+            text-align: center;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+        .server-running { background: #d4edda; color: #155724; }
+        .server-stopped { background: #f8d7da; color: #721c24; }
+        
+        .quick-links {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        .quick-link {
+            padding: 15px;
+            background: #00B98E;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        .quick-link:hover {
+            background: #009876;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏠 Makaan System Testing Dashboard</h1>
+        
+        <div class="server-status server-running">
+            ✅ Development Server Running on http://localhost:4201
+        </div>
+        
+        <div class="quick-links">
+            <a href="http://localhost:4201" target="_blank" class="quick-link">🏠 Customer Home</a>
+            <a href="http://localhost:4201/login" target="_blank" class="quick-link">🔐 Login Page</a>
+            <a href="http://localhost:4201/register" target="_blank" class="quick-link">📝 Register Page</a>
+            <a href="http://localhost:4201/admin/login" target="_blank" class="quick-link">👑 Admin Login</a>
+        </div>
+        
+        <!-- PRIORITY 1: ADMIN TESTS -->
+        <div class="test-section">
+            <h2>🚨 PRIORITY 1: Admin System Tests</h2>
+            
+            <div class="test-item priority-1">
+                <div class="test-description">
+                    <div class="test-title">Admin Login Test</div>
+                    <div class="test-details">Test hardcoded admin credentials and dashboard access</div>
+                    <div class="credentials">
+                        Email: admin@makaan.com<br>
+                        Password: admin123
+                    </div>
+                </div>
+                <a href="http://localhost:4201/admin/login" target="_blank" class="test-button btn-danger">Test Admin Login</a>
+                <div class="status-indicator status-pending"></div>
+            </div>
+            
+            <div class="test-item priority-1">
+                <div class="test-description">
+                    <div class="test-title">Admin Dashboard Verification</div>
+                    <div class="test-details">Verify real-time stats and admin functionality</div>
+                </div>
+                <a href="http://localhost:4201/admin/dashboard" target="_blank" class="test-button btn-danger">Check Dashboard</a>
+                <div class="status-indicator status-pending"></div>
+            </div>
+            
+            <div class="test-item priority-1">
+                <div class="test-description">
+                    <div class="test-title">User Management Panel</div>
+                    <div class="test-details">Test admin user creation without logout</div>
+                </div>
+                <a href="http://localhost:4201/admin/user-management" target="_blank" class="test-button btn-danger">Test User Creation</a>
+                <div class="status-indicator status-pending"></div>
+            </div>
+        </div>
+        
+        <!-- PRIORITY 2: USER CREATION -->
+        <div class="test-section">
+            <h2>🔧 PRIORITY 2: Demo User Creation</h2>
+            
+            <div class="test-item priority-2">
+                <div class="test-description">
+                    <div class="test-title">Create Demo Seller</div>
+                    <div class="test-details">Use admin panel to create seller test account</div>
+                    <div class="credentials">
+                        Email: seller@test.com<br>
+                        Password: test123<br>
+                        Name: Demo Seller<br>
+                        Role: seller
+                    </div>
+                </div>
+                <button class="test-button btn-warning" onclick="copyCredentials('seller@test.com', 'test123', 'Demo Seller')">Copy Seller Info</button>
+                <div class="status-indicator status-pending"></div>
+            </div>
+            
+            <div class="test-item priority-2">
+                <div class="test-description">
+                    <div class="test-title">Create Demo Customer</div>
+                    <div class="test-details">Use admin panel to create customer test account</div>
+                    <div class="credentials">
+                        Email: customer@test.com<br>
+                        Password: test123<br>
+                        Name: Demo Customer<br>
+                        Role: customer
+                    </div>
+                </div>
+                <button class="test-button btn-warning" onclick="copyCredentials('customer@test.com', 'test123', 'Demo Customer')">Copy Customer Info</button>
+                <div class="status-indicator status-pending"></div>
+            </div>
+        </div>
+        
+        <!-- PRIORITY 3: SELLER TESTS -->
+        <div class="test-section">
+            <h2>🏪 PRIORITY 3: Seller Panel Tests</h2>
+            
+            <div class="test-item priority-3">
+                <div class="test-description">
+                    <div class="test-title">Seller Login Flow</div>
+                    <div class="test-details">Test seller login and redirect to /seller</div>
+                    <div class="credentials">Expected: Redirect to /seller with "🏪 SELLER PANEL ACTIVE"</div>
+                </div>
+                <a href="http://localhost:4201/login" target="_blank" class="test-button btn-primary">Test Seller Login</a>
+                <div class="status-indicator status-pending"></div>
+            </div>
+            
+            <div class="test-item priority-3">
+                <div class="test-description">
+                    <div class="test-title">Seller Dashboard</div>
+                    <div class="test-details">Verify seller-specific dashboard and navbar</div>
+                </div>
+                <a href="http://localhost:4201/seller" target="_blank" class="test-button btn-primary">Check Seller Dashboard</a>
+                <div class="status-indicator status-pending"></div>
+            </div>
+            
+            <div class="test-item priority-3">
+                <div class="test-description">
+                    <div class="test-title">Seller Access Control</div>
+                    <div class="test-details">Try accessing customer routes while logged as seller</div>
+                    <div class="credentials">Expected: Blocked and redirected to /seller</div>
+                </div>
+                <a href="http://localhost:4201/dashboard" target="_blank" class="test-button btn-primary">Test Cross-Access</a>
+                <div class="status-indicator status-pending"></div>
+            </div>
+        </div>
+        
+        <!-- PRIORITY 4: CUSTOMER TESTS -->
+        <div class="test-section">
+            <h2>🏠 PRIORITY 4: Customer Panel Tests</h2>
+            
+            <div class="test-item priority-4">
+                <div class="test-description">
+                    <div class="test-title">Customer Login Flow</div>
+                    <div class="test-details">Test customer login and redirect to /dashboard</div>
+                    <div class="credentials">Expected: Redirect to /dashboard with "🏠 CUSTOMER PANEL ACTIVE"</div>
+                </div>
+                <a href="http://localhost:4201/login" target="_blank" class="test-button btn-primary">Test Customer Login</a>
+                <div class="status-indicator status-pending"></div>
+            </div>
+            
+            <div class="test-item priority-4">
+                <div class="test-description">
+                    <div class="test-title">Customer Dashboard</div>
+                    <div class="test-details">Verify customer-specific dashboard and profile completion</div>
+                </div>
+                <a href="http://localhost:4201/dashboard" target="_blank" class="test-button btn-primary">Check Customer Dashboard</a>
+                <div class="status-indicator status-pending"></div>
+            </div>
+            
+            <div class="test-item priority-4">
+                <div class="test-description">
+                    <div class="test-title">Customer Access Control</div>
+                    <div class="test-details">Try accessing seller routes while logged as customer</div>
+                    <div class="credentials">Expected: Blocked and redirected to /dashboard</div>
+                </div>
+                <a href="http://localhost:4201/seller" target="_blank" class="test-button btn-primary">Test Cross-Access</a>
+                <div class="status-indicator status-pending"></div>
+            </div>
+        </div>
+        
+        <!-- VERIFICATION CHECKLIST -->
+        <div class="test-section">
+            <h2>✅ Verification Checklist</h2>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px;">
+                <div>
+                    <h4>🔐 Authentication</h4>
+                    <label><input type="checkbox"> Admin login works</label><br>
+                    <label><input type="checkbox"> Seller login redirects to /seller</label><br>
+                    <label><input type="checkbox"> Customer login redirects to /dashboard</label><br>
+                    <label><input type="checkbox"> Role-based redirects work</label><br>
+                </div>
+                
+                <div>
+                    <h4>🛡️ Access Control</h4>
+                    <label><input type="checkbox"> Seller blocked from customer routes</label><br>
+                    <label><input type="checkbox"> Customer blocked from seller routes</label><br>
+                    <label><input type="checkbox"> Non-admin blocked from admin routes</label><br>
+                    <label><input type="checkbox"> Guards redirect properly</label><br>
+                </div>
+                
+                <div>
+                    <h4>📊 Data Integration</h4>
+                    <label><input type="checkbox"> Admin dashboard shows real stats</label><br>
+                    <label><input type="checkbox"> Profile data from Firestore</label><br>
+                    <label><input type="checkbox"> No "USER" placeholder text</label><br>
+                    <label><input type="checkbox"> Real-time updates work</label><br>
+                </div>
+                
+                <div>
+                    <h4>🎨 UI/UX</h4>
+                    <label><input type="checkbox"> Seller panel identification</label><br>
+                    <label><input type="checkbox"> Customer panel identification</label><br>
+                    <label><input type="checkbox"> Separate navbars per role</label><br>
+                    <label><input type="checkbox"> No navbar duplication</label><br>
+                </div>
+            </div>
+        </div>
+        
+        <!-- CONSOLE MONITORING -->
+        <div class="test-section">
+            <h2>🖥️ Console Monitoring</h2>
+            <p><strong>Open Browser DevTools (F12) and monitor console for:</strong></p>
+            <div style="background: #f8f9fa; padding: 15px; border-radius: 5px; font-family: monospace; font-size: 0.9em;">
+                ✅ Expected Logs:<br>
+                🔍 AUTH SERVICE - Getting profile for UID: [uid]<br>
+                🔍 FIRESTORE RAW DATA: {displayName: "...", role: "..."}<br>
+                🔄 LOGIN REDIRECT - User role: seller<br>
+                🎯 SELLER GUARD - Access ALLOWED<br><br>
+                
+                ❌ Error Indicators:<br>
+                Firebase API called outside injection context<br>
+                No Firestore data found<br>
+                Profile shows "USER"<br>
+                Guard access DENIED (unexpected)
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function copyCredentials(email, password, name) {
+            const text = `Email: ${email}\nPassword: ${password}\nName: ${name}`;
+            navigator.clipboard.writeText(text).then(() => {
+                alert(`Copied credentials:\n${text}`);
+            });
+        }
+        
+        // Auto-update status indicators based on manual testing
+        function updateStatus(element, status) {
+            const indicator = element.querySelector('.status-indicator');
+            indicator.className = `status-indicator status-${status}`;
+        }
+        
+        // Add click handlers to update status
+        document.querySelectorAll('.test-item').forEach(item => {
+            item.addEventListener('click', (e) => {
+                if (e.target.classList.contains('test-button')) {
+                    setTimeout(() => {
+                        const status = confirm('Did this test pass?') ? 'success' : 'failed';
+                        updateStatus(item, status);
+                    }, 1000);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

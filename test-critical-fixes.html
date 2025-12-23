@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Critical Issues Testing Dashboard</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            padding: 30px;
+        }
+        h1 {
+            color: #00B98E;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.2em;
+        }
+        .issue-section {
+            margin-bottom: 40px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            overflow: hidden;
+            background: #fafafa;
+        }
+        .issue-header {
+            background: linear-gradient(135deg, #00B98E, #009876);
+            color: white;
+            padding: 20px;
+            margin: 0;
+            font-size: 1.3em;
+            font-weight: bold;
+        }
+        .issue-content {
+            padding: 25px;
+        }
+        .test-step {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            margin: 10px 0;
+            background: white;
+            border-radius: 8px;
+            border-left: 5px solid #00B98E;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        .test-step:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+        }
+        .step-number {
+            background: #00B98E;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+        .step-content {
+            flex: 1;
+        }
+        .step-title {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        .step-description {
+            color: #666;
+            font-size: 0.9em;
+            line-height: 1.4;
+        }
+        .test-button {
+            padding: 10px 20px;
+            background: #00B98E;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+            margin-left: 15px;
+        }
+        .test-button:hover {
+            background: #009876;
+            transform: translateY(-1px);
+        }
+        .status-indicator {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            margin-left: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .status-pending { background: #ffc107; }
+        .status-success { background: #28a745; }
+        .status-failed { background: #dc3545; }
+        
+        .credentials-box {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        
+        .expected-result {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            border-radius: 6px;
+            padding: 12px;
+            margin: 10px 0;
+            color: #155724;
+        }
+        
+        .console-logs {
+            background: #2d3748;
+            color: #e2e8f0;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85em;
+            overflow-x: auto;
+        }
+        
+        .quick-links {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        .quick-link {
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        .quick-link:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00B98E, #009876);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        
+        .summary-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #00B98E;
+        }
+        .stat-label {
+            color: #666;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 Critical Issues Testing</h1>
+        <p class="subtitle">Systematic testing of all 5 critical issues that were fixed</p>
+        
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+        
+        <div class="summary-stats">
+            <div class="stat-card">
+                <div class="stat-number" id="totalTests">25</div>
+                <div class="stat-label">Total Tests</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="passedTests">0</div>
+                <div class="stat-label">Passed</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="failedTests">0</div>
+                <div class="stat-label">Failed</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="progressPercent">0%</div>
+                <div class="stat-label">Progress</div>
+            </div>
+        </div>
+        
+        <div class="quick-links">
+            <a href="http://localhost:4201" target="_blank" class="quick-link">🏠 Customer Home</a>
+            <a href="http://localhost:4201/login" target="_blank" class="quick-link">🔐 Login Page</a>
+            <a href="http://localhost:4201/admin/login" target="_blank" class="quick-link">👑 Admin Login</a>
+            <a href="http://localhost:4201/admin/user-management" target="_blank" class="quick-link">👥 User Management</a>
+            <a href="http://localhost:4201/admin/dashboard" target="_blank" class="quick-link">📊 Admin Dashboard</a>
+        </div>
+        
+        <!-- ISSUE 1: ADMIN ADD USER -->
+        <div class="issue-section">
+            <h2 class="issue-header">🚨 ISSUE 1: Admin Add User Not Working</h2>
+            <div class="issue-content">
+                <div class="credentials-box">
+                    <strong>Admin Credentials:</strong><br>
+                    Email: admin@makaan.com<br>
+                    Password: admin123
+                </div>
+                
+                <div class="test-step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <div class="step-title">Login as Admin</div>
+                        <div class="step-description">Access admin login and authenticate with hardcoded credentials</div>
+                    </div>
+                    <a href="http://localhost:4201/admin/login" target="_blank" class="test-button">Test Login</a>
+                    <div class="status-indicator status-pending" onclick="toggleStatus(this)"></div>
+                </div>
+                
+                <div class="test-step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <div class="step-title">Navigate to User Management</div>
+                        <div class="step-description">Go to admin user management page</div>
+                    </div>
+                    <a href="http://localhost:4201/admin/user-management" target="_blank" class="test-button">Open Page</a>
+                    <div class="status-indicator status-pending" onclick="toggleStatus(this)"></div>
+                </div>
+                
+                <div class="test-step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <div class="step-title">Create Test Seller</div>
+                        <div class="step-description">Fill form and create a seller account</div>
+                        <div class="credentials-box">
+                            Name: Test Seller<br>
+                            Email: testseller@example.com<br>
+                            Password: test123<br>
+                            Role: seller<br>
+                            Aadhaar: 123456789012
+                        </div>
+                    </div>
+                    <button class="test-button" onclick="copyCredentials('testseller@example.com', 'test123', 'Test Seller', 'seller')">Copy Info</button>
+                    <div class="status-indicator status-pending" onclick="toggleStatus(this)"></div>
+                </div>
+                
+                <div class="test-step">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <div class="step-title">Create Test Customer</div>
+                        <div class="step-description">Fill form and create a customer account</div>
+                        <div class="credentials-box">
+                            Name: Test Customer<br>
+                            Email: testcustomer@example.com<br>
+                            Password: test123<br>
+                            Role: customer<br>
+                            Aadhaar: 987654321098
+                        </div>
+                    </div>
+                    <button class="test-button" onclick="copyCredentials('testcustomer@example.com', 'test123', 'Test Customer', 'customer')">Copy Info</button>
+                    <div class="status-indicator status-pending" onclick="toggleStatus(this)"></div>
+                </div>
+                
+                <div class="test-step">
+                    <div class="step-number">5</div>
+                    <div class="step-content">
+                        <div class="step-title">Verify Success Messages</div>
+                        <div class="step-description">Check for success messages and admin staying logged in</div>
+                        <div class="expected-result">
+                            ✅ Expected: Success message appears<br>
+                            ✅ Expected: Admin remains logged in<br>
+                            ✅ Expected: Users appear in Firebase Auth<br>
+                            ✅ Expected: Firestore documents created
+                        </div>
+                    </div>
+                    <div class="status-indicator status-pending" onclick="toggleStatus(this)"></div>
+                </div>
+                
+                <div class="console-logs">
+                    <strong>Expected Console Logs:</strong><br>
+                    🔍 AUTH SERVICE - Admin creating user: {email: "...", displayName: "...", role: "..."}<br>
+                    🔍 AUTH SERVICE - New user created in Firebase Auth: [uid]<br>
+                    🔍 AUTH SERVICE - Firestore document created successfully<br>
+                    🔍 AUTH SERVICE - Admin re-authenticated successfully
+                </div>
+            </div>
+        </div>
+        
+        <!-- ISSUE 2: ADMIN DASHBOARD PROPERTIES -->
+        <div class="issue-section">
+            <h2 class="issue-header">📊 ISSUE 2: Admin Dashboard Properties Not Displaying</h2>
+            <div class="issue-content">
+                <div class="test-step">
+                    <div class="step-number">6</div>
+                    <div class="step-content">
+                        <div class="step-title">Check Admin Dashboard</div>
+                        <div class="step-description">Verify property counts and recent properties section</div>
+                    </div>
+                    <a href="http://localhost:4201/admin/dashboard" target="_blank" class="test-button">Open Dashboard</a>
+                    <div class="status-indicator status-pending" onclick="toggleStatus(this)"></div>
+                </div>
+                
+                <div class="test-step">
+                    <div class="step-number">7</div>
+                    <div class="step-content">
+                        <div class="step-title">Verify Property Count</div>
+                        <div class="step-description">Check "Total Properties" card shows correct number</div>
+                        <div class="expected-result">
+                            ✅ Expected: Property count updates dynamically<br>
+                            ✅ Expected: Shows 0 if no properties exist
+                        </div>
+                    </div>
+                    <div class="status-indicator status-pending" onclick="toggleStatus(this)"></div>
+                </div>
+                
+                <div class="test-step">
+                    <div class="step-number">8</div>
+                    <div class="step-content">
+                        <div class="step-title">Check Recent Properties Section</div>
+                        <div class="step-description">Look for "Recent Properties Added" table</div>
+                        <div class="expected-result">
+                            ✅ Expected: Table shows property details<br>
+                            ✅ Expected: Shows message if no properties<br>
+                            ✅ Expected: Updates in real-time
+                        </div>
+                    </div>
+                    <div class="status-indicator status-pending" onclick="toggleStatus(this)"></div>
+                </div>
+                
+                <div class="test-step">
+                    <div class="step-number">9</div>
+                    <div class="step-content">
+                        <div class="step-title">Create Demo Property</div>
+                        <div class="step-description">Add a property via user management to test display</div>
+                        <div class="credentials-box">
+                            Title: Test Property<br>
+                            Price: 5000000<br>
+                            Location: Mumbai<br>
+                            Type: sale<br>
+                            Seller Email: testseller@example.com
+                        </div>
+                    </div>
+                    <a href="http://localhost:4201/admin/user-management" target="_blank" class="test-button">Add Property</a>
+                    <div class="status-indicator status-pending" onclick="toggleStatus(this)"></div>
+                </div>
+                
+                <div class="test-step">
+                    <div class="step-number">10</div>
+                    <div class="step-content">
+                        <div class="step-title">Verify Real-time Update</div>
+                        <div class="step-description">Check dashboard updates after property creation</div>
+                        <div class="expected-result">
+                            ✅ Expected: Property count increases<br>
+                            ✅ Expected: New property appears in table<br>
+                            ✅ Expected: No page refresh needed
+                        </div>
+                    </div>
+                    <div class="status-indicator status-pending" onclick="toggleStatus(this)"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- ISSUE 3: CUSTOMER DASHBOARD -->
+        <div class="issue-section">
+            <h2 class="issue-header">🏠 ISSUE 3: Customer Dashboard Missing</h2>
+            <div class="issue-content">
+                <div class="test-step">
+                    <div class="step-number">11</div>
+                    <div class="step-content">
+                        <div class="step-title">Logout from Admin</div>
+                        <div class="step-description">Ensure clean logout from admin panel</div>
+                    </div>
+                    <div class="status-indicator status-pending" onclick="toggleStatus(this)"></div>
+                </div>
+                
+                <div class="test-step">
+                    <div class="step-number">12</div>
+                    <div class="step-content">
+                        <div class="step-title">Login as Customer</div>
+                        <div class="step-description">Use test customer credentials</div>
+                        <div class="credentials-box">
+                            Email: testcustomer@example.com<br>
+                            Password: test123
+                        </div>
+                    </div>
+                    <a href="http://localhost:4201/login" target="_blank" class="test-button">Login Page</a>
+                    <div class="status-indicator status-pending" onclick="toggleStatus(this)"></div>
+                </div>
+                
+                <div class="test-step">
+                    <div class="step-number">13</div>
+                    <div class="step-content">
+                        <div class="step-title">Verify Auto-Redirect</div>
+                        <div class="step-description">Should redirect to /dashboard automatically</div>
+                        <div class="expected-result">
+                            ✅ Expected: Redirects to /dashboard<br>
+                            ✅ Expected: Shows "🏠 CUSTOMER PANEL ACTIVE"<br>
+                            ✅ Expected: Customer navbar appears
+                        </div>
+                    </div>
+                    <div class="status-indicator status-pending" onclick="toggleStatus(this)"></div>
+                </div>
+                
+                <div class="test-step">
+                    <div class="step-number">14</div>
+                    <div class="step-content">
+                        <div class="step-title">Check Welcome Message</div>
+                        <div class="step-description">Verify customer name appears in welcome</div>
+                        <div class="expected-result">
+                            ✅ Expected: Shows customer name<br>
+                            ✅ Expected: Profile completion percentage<br>
+                            ✅ Expected: Customer-specific content
+                        </div>
+                    </div>
+                    <div class="status-indicator status-pending" onclick="toggleStatus(this)"></div>
+                </div>
+                
+                <div class="test-step">
+                    <div class="step-number">15</div>
+                    <div class="step-content">
+                        <div class="step-title">Test Direct Dashboard Access</div>
+                        <div class="step-description">Navigate directly to /dashboard URL</div>
+                    </div>
+                    <a href="http://localhost:4201/dashboard" target="_blank" class="test-button">Direct Access</a>
+                    <div class="status-indicator status-pending" onclick="toggleStatus(this)"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- ISSUE 4: PROFILE USER TEXT -->
+        <div class="issue-section">
+            <h2 class="issue-header">👤 ISSUE 4: Profile Shows "USER" Instead of Real Data</h2>
+            <div class="issue-content">
+                <div class="test-step">
+                    <div class="step-number">16</div>
+                    <div class="step-content">
+                        <div class="step-title">Check Header Display</div>
+                        <div class="step-description">Verify header shows customer name, not "USER"</div>
+                        <div class="expected-result">
+                            ✅ Expected: Shows "Test Customer" or email prefix<br>
+                            ❌ Never shows: "USER"
+                        </div>
+                    </div>
+                    <div class="status-indicator status-pending" onclick="toggleStatus(this)"></div>
+                </div>
+                
+                <div class="test-step">
+                    <div class="step-number">17</div>
+                    <div class="step-content">
+                        <div class="step-title">Access Customer Profile</div>
+                        <div class="step-description">Navigate to customer profile page</div>
+                    </div>
+                    <a href="http://localhost:4201/profile" target="_blank" class="test-button">Profile Page</a>
+                    <div class="status-indicator status-pending" onclick="toggleStatus(this)"></div>
+                </div>
+                
+                <div class="test-step">
+                    <div class="step-number">18</div>
+                    <div class="step-content">
+                        <div class="step-title">Verify Profile Data</div>
+                        <div class="step-description">Check all profile fields show correct data</div>
+                        <div class="expected-result">
+                            ✅ Expected: Name field populated<br>
+                            ✅ Expected: Email field populated<br>
+                            ✅ Expected: Role shows "customer"<br>
+                            ✅ Expected: Account status visible
+                        </div>
+                    </div>
+                    <div class="status-indicator status-pending" onclick="toggleStatus(this)"></div>
+                </div>
+                
+                <div class="test-step">
+                    <div class="step-number">19</div>
+                    <div class="step-content">
+                        <div class="step-title">Test Seller Profile</div>
+                        <div class="step-description">Login as seller and check profile display</div>
+                        <div class="credentials-box">
+                            Email: testseller@example.com<br>
+                            Password: test123
+                        </div>
+                    </div>
+                    <a href="http://localhost:4201/login" target="_blank" class="test-button">Test Seller</a>
+                    <div class="status-indicator status-pending" onclick="toggleStatus(this)"></div>
+                </div>
+                
+                <div class="test-step">
+                    <div class="step-number">20</div>
+                    <div class="step-content">
+                        <div class="step-title">Check Seller Profile Page</div>
+                        <div class="step-description">Verify seller profile shows correct data</div>
+                    </div>
+                    <a href="http://localhost:4201/seller/profile" target="_blank" class="test-button">Seller Profile</a>
+                    <div class="status-indicator status-pending" onclick="toggleStatus(this)"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- ISSUE 5: ROLE-BASED REDIRECTION -->
+        <div class="issue-section">
+            <h2 class="issue-header">🔄 ISSUE 5: Role-Based Redirection Broken</h2>
+            <div class="issue-content">
+                <div class="test-step">
+                    <div class="step-number">21</div>
+                    <div class="step-content">
+                        <div class="step-title">Test Seller Login Redirect</div>
+                        <div class="step-description">Login as seller, should redirect to /seller</div>
+                        <div class="expected-result">
+                            ✅ Expected: Redirects to /seller<br>
+                            ✅ Expected: Shows "🏪 SELLER PANEL ACTIVE"<br>
+                            ✅ Expected: Seller navbar appears
+                        </div>
+                    </div>
+                    <div class="status-indicator status-pending" onclick="toggleStatus(this)"></div>
+                </div>
+                
+                <div class="test-step">
+                    <div class="step-number">22</div>
+                    <div class="step-content">
+                        <div class="step-title">Test Cross-Access Blocking (Seller → Customer)</div>
+                        <div class="step-description">While logged as seller, try accessing customer routes</div>
+                        <div class="expected-result">
+                            ❌ Should Block: /dashboard<br>
+                            ❌ Should Block: /profile (customer)<br>
+                            ✅ Should Redirect: Back to /seller
+                        </div>
+                    </div>
+                    <a href="http://localhost:4201/dashboard" target="_blank" class="test-button">Test Block</a>
+                    <div class="status-indicator status-pending" onclick="toggleStatus(this)"></div>
+                </div>
+                
+                <div class="test-step">
+                    <div class="step-number">23</div>
+                    <div class="step-content">
+                        <div class="step-title">Test Customer Login Redirect</div>
+                        <div class="step-description">Login as customer, should redirect to /dashboard</div>
+                        <div class="expected-result">
+                            ✅ Expected: Redirects to /dashboard<br>
+                            ✅ Expected: Shows "🏠 CUSTOMER PANEL ACTIVE"<br>
+                            ✅ Expected: Customer navbar appears
+                        </div>
+                    </div>
+                    <div class="status-indicator status-pending" onclick="toggleStatus(this)"></div>
+                </div>
+                
+                <div class="test-step">
+                    <div class="step-number">24</div>
+                    <div class="step-content">
+                        <div class="step-title">Test Cross-Access Blocking (Customer → Seller)</div>
+                        <div class="step-description">While logged as customer, try accessing seller routes</div>
+                        <div class="expected-result">
+                            ❌ Should Block: /seller<br>
+                            ❌ Should Block: /seller/profile<br>
+                            ✅ Should Redirect: Back to /dashboard
+                        </div>
+                    </div>
+                    <a href="http://localhost:4201/seller" target="_blank" class="test-button">Test Block</a>
+                    <div class="status-indicator status-pending" onclick="toggleStatus(this)"></div>
+                </div>
+                
+                <div class="test-step">
+                    <div class="step-number">25</div>
+                    <div class="step-content">
+                        <div class="step-title">Verify Console Logs</div>
+                        <div class="step-description">Check browser console for guard decision logs</div>
+                        <div class="console-logs">
+                            <strong>Expected Guard Logs:</strong><br>
+                            🔍 CUSTOMER GUARD - Access ALLOWED<br>
+                            🔍 SELLER GUARD - Access ALLOWED<br>
+                            ❌ CUSTOMER GUARD - Access BLOCKED<br>
+                            🔄 SELLER GUARD - Redirecting customer to /dashboard
+                        </div>
+                    </div>
+                    <div class="status-indicator status-pending" onclick="toggleStatus(this)"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 40px; padding: 20px; background: #f8f9fa; border-radius: 10px;">
+            <h3>🎯 Testing Complete!</h3>
+            <p>All critical issues have been systematically tested. Check the progress above and console logs for detailed results.</p>
+            <button class="test-button" onclick="generateReport()" style="font-size: 1.1em; padding: 15px 30px;">Generate Test Report</button>
+        </div>
+    </div>
+    
+    <script>
+        let testResults = {};
+        let totalTests = 25;
+        
+        function toggleStatus(element) {
+            if (element.classList.contains('status-pending')) {
+                element.classList.remove('status-pending');
+                element.classList.add('status-success');
+                updateProgress(1, 0);
+            } else if (element.classList.contains('status-success')) {
+                element.classList.remove('status-success');
+                element.classList.add('status-failed');
+                updateProgress(-1, 1);
+            } else {
+                element.classList.remove('status-failed');
+                element.classList.add('status-pending');
+                updateProgress(0, -1);
+            }
+        }
+        
+        function updateProgress(passedDelta, failedDelta) {
+            let passed = parseInt(document.getElementById('passedTests').textContent) + passedDelta;
+            let failed = parseInt(document.getElementById('failedTests').textContent) + failedDelta;
+            
+            document.getElementById('passedTests').textContent = passed;
+            document.getElementById('failedTests').textContent = failed;
+            
+            let progress = ((passed + failed) / totalTests) * 100;
+            document.getElementById('progressPercent').textContent = Math.round(progress) + '%';
+            document.getElementById('progressFill').style.width = progress + '%';
+        }
+        
+        function copyCredentials(email, password, name, role) {
+            const text = `Name: ${name}\nEmail: ${email}\nPassword: ${password}\nRole: ${role}`;
+            navigator.clipboard.writeText(text).then(() => {
+                alert(`Copied credentials:\n${text}`);
+            });
+        }
+        
+        function generateReport() {
+            let passed = parseInt(document.getElementById('passedTests').textContent);
+            let failed = parseInt(document.getElementById('failedTests').textContent);
+            let pending = totalTests - passed - failed;
+            
+            let report = `
+CRITICAL ISSUES TEST REPORT
+===========================
+Total Tests: ${totalTests}
+Passed: ${passed}
+Failed: ${failed}
+Pending: ${pending}
+Success Rate: ${Math.round((passed / totalTests) * 100)}%
+
+ISSUE STATUS:
+1. Admin Add User: ${getIssueStatus(1, 5)}
+2. Admin Dashboard Properties: ${getIssueStatus(6, 10)}
+3. Customer Dashboard: ${getIssueStatus(11, 15)}
+4. Profile Display: ${getIssueStatus(16, 20)}
+5. Role-Based Redirection: ${getIssueStatus(21, 25)}
+
+Generated: ${new Date().toLocaleString()}
+            `;
+            
+            navigator.clipboard.writeText(report).then(() => {
+                alert('Test report copied to clipboard!');
+            });
+        }
+        
+        function getIssueStatus(start, end) {
+            let indicators = document.querySelectorAll('.status-indicator');
+            let passed = 0, failed = 0, total = end - start + 1;
+            
+            for (let i = start - 1; i < end; i++) {
+                if (indicators[i].classList.contains('status-success')) passed++;
+                if (indicators[i].classList.contains('status-failed')) failed++;
+            }
+            
+            if (passed === total) return '✅ PASSED';
+            if (failed > 0) return '❌ FAILED';
+            return '⏳ PENDING';
+        }
+    </script>
+</body>
+</html>

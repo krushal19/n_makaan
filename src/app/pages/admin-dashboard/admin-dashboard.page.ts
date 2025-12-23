@@ -19,7 +19,7 @@ import { AuthService, UserProfile } from '../../services/auth.service';
             <button class="btn btn-warning">Manage Properties</button>
         </div>
       </div>
-      <div *ngIf="!userProfile && !loading">
+      <div *ngIf="!userProfile && loading">
         <p>Loading user profile...</p>
       </div>
     </div>
@@ -30,16 +30,19 @@ export class AdminDashboardPage implements OnInit {
     userProfile: UserProfile | null = null;
     loading = true;
 
-    async ngOnInit() {
-        try {
-            const user = this.authService.getCurrentUser();
-            if (user) {
-                this.userProfile = await this.authService.getUserProfilePromise(user.uid);
+    ngOnInit() {
+        console.log('🔍 ADMIN DASHBOARD - Loading user profile');
+        
+        this.authService.getCurrentUserProfile().subscribe({
+            next: (profile) => {
+                console.log('🔍 ADMIN DASHBOARD - Profile loaded:', profile);
+                this.userProfile = profile;
+                this.loading = false;
+            },
+            error: (error) => {
+                console.error('🔍 ADMIN DASHBOARD - Error loading profile:', error);
+                this.loading = false;
             }
-        } catch (error) {
-            console.error('Error loading user profile:', error);
-        } finally {
-            this.loading = false;
-        }
+        });
     }
 }

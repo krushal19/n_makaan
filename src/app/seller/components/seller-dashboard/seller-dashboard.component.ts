@@ -13,6 +13,12 @@ import { UserProfile } from '../../../core/models/user.model';
       <div class="row">
         <div class="col-12">
           <div class="bg-light rounded h-100 p-4">
+            <!-- CLEAR IDENTIFICATION FOR TESTING -->
+            <div class="alert alert-success text-center mb-4">
+              <h3 class="mb-0">🏪 SELLER PANEL ACTIVE</h3>
+              <p class="mb-0" *ngIf="userProfile">Welcome, {{ userProfile.displayName || 'Seller' }}! (Role: {{ userProfile.role | uppercase }})</p>
+            </div>
+            
             <h6 class="mb-4">Seller Dashboard</h6>
             
             <!-- Welcome Section -->

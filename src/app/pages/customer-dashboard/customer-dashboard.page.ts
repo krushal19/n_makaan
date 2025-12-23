@@ -9,11 +9,11 @@ import { AuthService, UserProfile } from '../../services/auth.service';
     template: `
     <div class="container py-5">
       <div *ngIf="userProfile">
-        <h2>Welcome, {{ userProfile.displayName || 'User' }}</h2>
+        <h2>Welcome, {{ userProfile.displayName || (userProfile.email ? userProfile.email.split('@')[0] : 'Guest') }}</h2>
         <p>Email: {{ userProfile.email }}</p>
         <p>This is the Customer Dashboard.</p>
       </div>
-      <div *ngIf="!userProfile && !loading">
+      <div *ngIf="!userProfile && loading">
         <p>Loading user profile...</p>
       </div>
     </div>
@@ -24,16 +24,19 @@ export class CustomerDashboardPage implements OnInit {
     userProfile: UserProfile | null = null;
     loading = true;
 
-    async ngOnInit() {
-        try {
-            const user = this.authService.getCurrentUser();
-            if (user) {
-                this.userProfile = await this.authService.getUserProfilePromise(user.uid);
+    ngOnInit() {
+        console.log('🔍 CUSTOMER DASHBOARD - Loading user profile');
+        
+        this.authService.getCurrentUserProfile().subscribe({
+            next: (profile) => {
+                console.log('🔍 CUSTOMER DASHBOARD - Profile loaded:', profile);
+                this.userProfile = profile;
+                this.loading = false;
+            },
+            error: (error) => {
+                console.error('🔍 CUSTOMER DASHBOARD - Error loading profile:', error);
+                this.loading = false;
             }
-        } catch (error) {
-            console.error('Error loading user profile:', error);
-        } finally {
-            this.loading = false;
-        }
+        });
     }
 }

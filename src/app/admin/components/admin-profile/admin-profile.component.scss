@@ -1,0 +1,51 @@
+// Admin Profile Component Styles
+.container-fluid {
+  padding: 20px;
+}
+
+.bg-light {
+  background-color: #f8f9fa !important;
+}
+
+.bg-white {
+  background-color: #ffffff !important;
+}
+
+.shadow-sm {
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075) !important;
+}
+
+.text-primary {
+  color: #00B98E !important;
+}
+
+.badge {
+  font-size: 0.875em;
+}
+
+.form-control-plaintext {
+  padding-left: 0;
+  padding-right: 0;
+  border: none;
+  background-color: transparent;
+}
+
+.btn-primary {
+  background-color: #00B98E;
+  border-color: #00B98E;
+}
+
+.btn-primary:hover {
+  background-color: #009d7a;
+  border-color: #009d7a;
+}
+
+.btn-success {
+  background-color: #28a745;
+  border-color: #28a745;
+}
+
+.spinner-border {
+  width: 3rem;
+  height: 3rem;
+}

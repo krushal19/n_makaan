@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create Demo Users</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .user-card { border: 1px solid #ccc; padding: 15px; margin: 10px 0; border-radius: 5px; }
+        .seller { background-color: #e8f5e8; }
+        .customer { background-color: #e8f0ff; }
+        button { padding: 10px 15px; margin: 5px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>Demo User Creation Instructions</h1>
+    
+    <div class="user-card seller">
+        <h3>🏪 Demo Seller</h3>
+        <p><strong>Email:</strong> seller@test.com</p>
+        <p><strong>Password:</strong> test123</p>
+        <p><strong>Name:</strong> Demo Seller</p>
+        <p><strong>Role:</strong> seller</p>
+        <p><strong>Aadhaar:</strong> 123456789012</p>
+        <button onclick="copyToClipboard('seller@test.com')">Copy Email</button>
+        <button onclick="copyToClipboard('test123')">Copy Password</button>
+    </div>
+    
+    <div class="user-card customer">
+        <h3>🏠 Demo Customer</h3>
+        <p><strong>Email:</strong> customer@test.com</p>
+        <p><strong>Password:</strong> test123</p>
+        <p><strong>Name:</strong> Demo Customer</p>
+        <p><strong>Role:</strong> customer</p>
+        <p><strong>Aadhaar:</strong> 987654321098</p>
+        <button onclick="copyToClipboard('customer@test.com')">Copy Email</button>
+        <button onclick="copyToClipboard('test123')">Copy Password</button>
+    </div>
+    
+    <h2>Testing Instructions:</h2>
+    <ol>
+        <li>Go to <a href="http://localhost:4201/register" target="_blank">Registration Page</a></li>
+        <li>Register the Demo Seller first</li>
+        <li>Logout and register the Demo Customer</li>
+        <li>Test login with both accounts</li>
+        <li>Verify panel separation</li>
+    </ol>
+    
+    <h2>Expected Results:</h2>
+    <ul>
+        <li>Seller login → /seller → "🏪 SELLER PANEL ACTIVE"</li>
+        <li>Customer login → /customer → "🏠 CUSTOMER PANEL ACTIVE"</li>
+        <li>Different navbars for each role</li>
+        <li>No cross-panel access</li>
+    </ul>
+
+    <script>
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(function() {
+                alert('Copied: ' + text);
+            });
+        }
+    </script>
+</body>
+</html>

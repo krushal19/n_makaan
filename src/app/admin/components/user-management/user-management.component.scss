@@ -1,0 +1,41 @@
+// User Management Component Styles
+.container-fluid {
+  padding: 20px;
+}
+
+.bg-light {
+  background-color: #f8f9fa !important;
+}
+
+.bg-white {
+  background-color: #ffffff !important;
+}
+
+.shadow-sm {
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075) !important;
+}
+
+.btn-primary {
+  background-color: #00B98E;
+  border-color: #00B98E;
+}
+
+.btn-primary:hover {
+  background-color: #009d7a;
+  border-color: #009d7a;
+}
+
+.btn-success {
+  background-color: #28a745;
+  border-color: #28a745;
+}
+
+.form-control:focus {
+  border-color: #00B98E;
+  box-shadow: 0 0 0 0.2rem rgba(0, 185, 142, 0.25);
+}
+
+.form-select:focus {
+  border-color: #00B98E;
+  box-shadow: 0 0 0 0.2rem rgba(0, 185, 142, 0.25);
+}

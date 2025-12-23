@@ -17,17 +17,17 @@ export class DashboardComponent implements OnInit {
   userProfile: UserProfile | null = null;
   isLoading = true;
 
-  async ngOnInit() {
-    try {
-      const user = this.authService.getCurrentUser();
-      if (user) {
-        this.userProfile = await this.authService.getUserProfilePromise(user.uid);
+  ngOnInit() {
+    this.authService.getCurrentUserProfile().subscribe({
+      next: (profile) => {
+        this.userProfile = profile;
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Error loading user profile:', error);
+        this.isLoading = false;
       }
-    } catch (error) {
-      console.error('Error loading user profile:', error);
-    } finally {
-      this.isLoading = false;
-    }
+    });
   }
 
   async logout() {

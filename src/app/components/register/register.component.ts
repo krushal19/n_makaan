@@ -56,6 +56,8 @@ export class RegisterComponent {
       try {
         const { email, password, displayName, role, aadhaarNumber } = this.registerForm.value;
 
+        console.log('🔄 REGISTRATION FLOW - Starting registration for:', { email, displayName, role });
+
         // Block admin role registration
         if (role === 'admin') {
           this.errorMessage = 'Admin registration is not allowed through this form.';
@@ -63,20 +65,42 @@ export class RegisterComponent {
           return;
         }
 
+        // Step 1: Register user (this creates Firebase Auth + Firestore document)
         await this.authService.register(email, password, displayName, role, aadhaarNumber);
         
-        // Redirect based on role
-        if (role === 'seller') {
-          this.router.navigate(['/seller']);
-        } else {
-          this.router.navigate(['/customer']);
-        }
+        console.log('🔄 REGISTRATION FLOW - Registration successful, executing immediate redirect');
+        
+        // Step 2: INSTANT role-based redirect after registration
+        this.redirectAfterRegistration(role);
       } catch (error: any) {
+        console.error('🔄 REGISTRATION FLOW - Registration failed:', error);
         this.errorMessage = this.getErrorMessage(error.code);
       } finally {
         this.isLoading = false;
       }
     }
+  }
+
+  private redirectAfterRegistration(role: string) {
+    console.log('🔄 REGISTRATION REDIRECT - Executing immediate redirect for role:', role);
+    
+    // MANDATORY: Instant redirection based on role - CORRECT PATHS
+    switch (role) {
+      case 'seller':
+        console.log('🔄 REGISTRATION REDIRECT - Seller registered, navigating to /seller');
+        this.router.navigate(['/seller']);
+        break;
+      case 'customer':
+        console.log('🔄 REGISTRATION REDIRECT - Customer registered, navigating to /dashboard');
+        this.router.navigate(['/dashboard']); // Customer dashboard is at /dashboard
+        break;
+      default:
+        console.log('🔄 REGISTRATION REDIRECT - Default role, navigating to /dashboard');
+        this.router.navigate(['/dashboard']);
+        break;
+    }
+    
+    console.log('🔄 REGISTRATION REDIRECT - Navigation completed, user should see their panel');
   }
 
   togglePassword() {

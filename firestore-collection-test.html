@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔥 Firestore Collection Verification Dashboard</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            padding: 30px;
+        }
+        h1 {
+            color: #dc3545;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.2em;
+        }
+        .problem-section {
+            margin-bottom: 40px;
+            border: 2px solid #dc3545;
+            border-radius: 12px;
+            overflow: hidden;
+            background: #fff5f5;
+        }
+        .problem-header {
+            background: linear-gradient(135deg, #dc3545, #c82333);
+            color: white;
+            padding: 20px;
+            margin: 0;
+            font-size: 1.3em;
+            font-weight: bold;
+        }
+        .problem-content {
+            padding: 25px;
+        }
+        .test-step {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            margin: 10px 0;
+            background: white;
+            border-radius: 8px;
+            border-left: 5px solid #dc3545;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        .test-step:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+        }
+        .step-number {
+            background: #dc3545;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+        .step-content {
+            flex: 1;
+        }
+        .step-title {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        .step-description {
+            color: #666;
+            font-size: 0.9em;
+            line-height: 1.4;
+        }
+        .test-button {
+            padding: 10px 20px;
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+            margin-left: 15px;
+        }
+        .test-button:hover {
+            background: #c82333;
+            transform: translateY(-1px);
+        }
+        .status-indicator {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            margin-left: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .status-pending { background: #ffc107; }
+        .status-success { background: #28a745; }
+        .status-failed { background: #dc3545; }
+        
+        .firebase-info {
+            background: #e7f3ff;
+            border: 1px solid #b3d9ff;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        
+        .expected-result {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            border-radius: 6px;
+            padding: 12px;
+            margin: 10px 0;
+            color: #155724;
+        }
+        
+        .console-logs {
+            background: #2d3748;
+            color: #e2e8f0;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85em;
+            overflow-x: auto;
+        }
+        
+        .quick-links {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        .quick-link {
+            padding: 15px;
+            background: linear-gradient(135deg, #dc3545, #c82333);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        .quick-link:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .firebase-console {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .firebase-console h3 {
+            color: #856404;
+            margin-top: 0;
+        }
+        
+        .collection-status {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .collection-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border: 2px solid #e0e0e0;
+        }
+        
+        .collection-card.exists {
+            border-color: #28a745;
+            background: #f8fff9;
+        }
+        
+        .collection-card.missing {
+            border-color: #dc3545;
+            background: #fff5f5;
+        }
+        
+        .collection-name {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .collection-status-text {
+            font-size: 0.9em;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔥 Firestore Collection Verification</h1>
+        <p class="subtitle">Fix Firestore collections not appearing + Instant login redirection</p>
+        
+        <div class="firebase-console">
+            <h3>🔍 Firebase Console Check</h3>
+            <p>Open Firebase Console and check if these collections exist:</p>
+            <div class="collection-status">
+                <div class="collection-card missing" id="usersCollection">
+                    <div class="collection-name">users</div>
+                    <div class="collection-status-text">❌ Not Visible</div>
+                </div>
+                <div class="collection-card missing" id="propertiesCollection">
+                    <div class="collection-name">properties</div>
+                    <div class="collection-status-text">❌ Not Visible</div>
+                </div>
+                <div class="collection-card missing" id="reportsCollection">
+                    <div class="collection-name">reports</div>
+                    <div class="collection-status-text">❌ Not Visible</div>
+                </div>
+            </div>
+            <a href="https://console.firebase.google.com/project/makaan-9945/firestore/data" target="_blank" class="test-button">Open Firebase Console</a>
+        </div>
+        
+        <div class="quick-links">
+            <a href="http://localhost:4201" target="_blank" class="quick-link">🏠 Home Page</a>
+            <a href="http://localhost:4201/register" target="_blank" class="quick-link">📝 Registration</a>
+            <a href="http://localhost:4201/login" target="_blank" class="quick-link">🔐 Login</a>
+            <a href="http://localhost:4201/admin/login" target="_blank" class="quick-link">👑 Admin Login</a>
+        </div>
+        
+        <!-- PROBLEM 1: FIRESTORE COLLECTIONS -->
+        <div class="problem-section">
+            <h2 class="problem-header">🔥 PROBLEM 1: Force Firestore Collections Creation</h2>
+            <div class="problem-content">
+                <div class="firebase-info">
+                    <strong>CRITICAL FACT:</strong><br>
+                    Firestore collections only appear in Firebase Console AFTER the first document is written.<br>
+                    If no documents exist, collections remain invisible.
+                </div>
+                
+                <div class="test-step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <div class="step-title">Test User Registration (Creates users collection)</div>
+                        <div class="step-description">Register a new user to force users collection creation</div>
+                        <div class="firebase-info">
+                            Name: Test User<br>
+                            Email: test@example.com<br>
+                            Password: test123<br>
+                            Role: customer<br>
+                            Aadhaar: 123456789012
+                        </div>
+                        <div class="expected-result">
+                            ✅ Expected: Console shows 🔥 FIRESTORE WRITE logs<br>
+                            ✅ Expected: Firebase Console shows "users" collection<br>
+                            ✅ Expected: Immediate redirect to /dashboard
+                        </div>
+                    </div>
+                    <a href="http://localhost:4201/register" target="_blank" class="test-button">Test Registration</a>
+                    <div class="status-indicator status-pending" onclick="toggleStatus(this)"></div>
+                </div>
+                
+                <div class="test-step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <div class="step-title">Test Admin User Creation (Forces users collection)</div>
+                        <div class="step-description">Use admin panel to create users</div>
+                        <div class="firebase-info">
+                            Admin: admin@makaan.com / admin123<br>
+                            Create: seller@test.com / test123 (seller)
+                        </div>
+                        <div class="expected-result">
+                            ✅ Expected: Console shows 🔥 FIRESTORE WRITE logs<br>
+                            ✅ Expected: Admin stays logged in<br>
+                            ✅ Expected: New user document in Firebase Console
+                        </div>
+                    </div>
+                    <a href="http://localhost:4201/admin/login" target="_blank" class="test-button">Admin Login</a>
+                    <div class="status-indicator status-pending" onclick="toggleStatus(this)"></div>
+                </div>
+                
+                <div class="test-step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <div class="step-title">Test Property Creation (Creates properties collection)</div>
+                        <div class="step-description">Create property via admin panel</div>
+                        <div class="firebase-info">
+                            Title: Test Property<br>
+                            Price: 1000000<br>
+                            Location: Test City<br>
+                            Seller Email: seller@test.com
+                        </div>
+                        <div class="expected-result">
+                            ✅ Expected: Console shows 🔥 FIRESTORE WRITE logs<br>
+                            ✅ Expected: Firebase Console shows "properties" collection<br>
+                            ✅ Expected: Property appears in admin dashboard
+                        </div>
+                    </div>
+                    <a href="http://localhost:4201/admin/user-management" target="_blank" class="test-button">Create Property</a>
+                    <div class="status-indicator status-pending" onclick="toggleStatus(this)"></div>
+                </div>
+                
+                <div class="console-logs">
+                    <strong>Expected Console Logs (🔥 FIRESTORE WRITE):</strong><br>
+                    🔥 FIRESTORE WRITE - Starting registration process: {email: "...", role: "..."}<br>
+                    🔥 FIREBASE AUTH - User created with UID: [uid]<br>
+                    🔥 FIRESTORE WRITE - Writing user document to users collection: {...}<br>
+                    🔥 FIRESTORE SUCCESS - User document written to users/{uid}<br>
+                    🔥 FIRESTORE SUCCESS - Collection "users" should now be visible in Firebase Console
+                </div>
+            </div>
+        </div>
+        
+        <!-- PROBLEM 2: LOGIN FLOW -->
+        <div class="problem-section">
+            <h2 class="problem-header">🔄 PROBLEM 2: Instant Login Redirection (No Lingering)</h2>
+            <div class="problem-content">
+                <div class="firebase-info">
+                    <strong>REQUIREMENT:</strong><br>
+                    Users must be redirected IMMEDIATELY after login based on their role.<br>
+                    NO user should stay on login page or see home page after authentication.
+                </div>
+                
+                <div class="test-step">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <div class="step-title">Test Seller Login Flow</div>
+                        <div class="step-description">Login as seller, should redirect to /seller instantly</div>
+                        <div class="firebase-info">
+                            Email: seller@test.com<br>
+                            Password: test123
+                        </div>
+                        <div class="expected-result">
+                            ✅ Expected: Immediate redirect to /seller<br>
+                            ✅ Expected: Shows "🏪 SELLER PANEL ACTIVE"<br>
+                            ✅ Expected: NO lingering on login page
+                        </div>
+                    </div>
+                    <a href="http://localhost:4201/login" target="_blank" class="test-button">Test Seller Login</a>
+                    <div class="status-indicator status-pending" onclick="toggleStatus(this)"></div>
+                </div>
+                
+                <div class="test-step">
+                    <div class="step-number">5</div>
+                    <div class="step-content">
+                        <div class="step-title">Test Customer Login Flow</div>
+                        <div class="step-description">Login as customer, should redirect to /dashboard instantly</div>
+                        <div class="firebase-info">
+                            Email: test@example.com<br>
+                            Password: test123
+                        </div>
+                        <div class="expected-result">
+                            ✅ Expected: Immediate redirect to /dashboard<br>
+                            ✅ Expected: Shows "🏠 CUSTOMER PANEL ACTIVE"<br>
+                            ✅ Expected: NO lingering on login page
+                        </div>
+                    </div>
+                    <a href="http://localhost:4201/login" target="_blank" class="test-button">Test Customer Login</a>
+                    <div class="status-indicator status-pending" onclick="toggleStatus(this)"></div>
+                </div>
+                
+                <div class="test-step">
+                    <div class="step-number">6</div>
+                    <div class="step-content">
+                        <div class="step-title">Test Cross-Panel Blocking</div>
+                        <div class="step-description">Verify sellers can't access customer routes and vice versa</div>
+                        <div class="expected-result">
+                            ❌ Seller accessing /dashboard → Blocked, redirect to /seller<br>
+                            ❌ Customer accessing /seller → Blocked, redirect to /dashboard<br>
+                            ✅ Console shows guard decision logs
+                        </div>
+                    </div>
+                    <div class="status-indicator status-pending" onclick="toggleStatus(this)"></div>
+                </div>
+                
+                <div class="console-logs">
+                    <strong>Expected Console Logs (🔄 LOGIN FLOW):</strong><br>
+                    🔄 LOGIN FLOW - Starting login process for: [email]<br>
+                    🔄 LOGIN FLOW - Firebase Auth successful for UID: [uid]<br>
+                    🔄 LOGIN FLOW - Profile fetched from Firestore: {...}<br>
+                    🔄 LOGIN FLOW - User role detected: [role]<br>
+                    🔄 LOGIN REDIRECT - Executing immediate redirect for role: [role]<br>
+                    🔄 LOGIN REDIRECT - Navigation completed, user should no longer see login page
+                </div>
+            </div>
+        </div>
+        
+        <!-- PROBLEM 3: FIREBASE CONNECTION -->
+        <div class="problem-section">
+            <h2 class="problem-header">🔗 PROBLEM 3: Single Firebase Connection Verification</h2>
+            <div class="problem-content">
+                <div class="firebase-info">
+                    <strong>FIREBASE CONFIG:</strong><br>
+                    Project ID: makaan-9945<br>
+                    Auth Domain: makaan-9945.firebaseapp.com<br>
+                    Single instance used everywhere via dependency injection
+                </div>
+                
+                <div class="test-step">
+                    <div class="step-number">7</div>
+                    <div class="step-content">
+                        <div class="step-title">Verify Firebase Connection</div>
+                        <div class="step-description">Check that all operations use same Firebase instance</div>
+                        <div class="expected-result">
+                            ✅ Expected: All data appears in same Firebase project<br>
+                            ✅ Expected: No multiple Firebase initializations<br>
+                            ✅ Expected: AuthService is singleton (providedIn: 'root')
+                        </div>
+                    </div>
+                    <div class="status-indicator status-pending" onclick="toggleStatus(this)"></div>
+                </div>
+                
+                <div class="test-step">
+                    <div class="step-number">8</div>
+                    <div class="step-content">
+                        <div class="step-title">Test Real-time Data Updates</div>
+                        <div class="step-description">Verify admin dashboard updates when new data is added</div>
+                        <div class="expected-result">
+                            ✅ Expected: Admin dashboard shows real-time user/property counts<br>
+                            ✅ Expected: Data updates without page refresh<br>
+                            ✅ Expected: Same database used across all components
+                        </div>
+                    </div>
+                    <a href="http://localhost:4201/admin/dashboard" target="_blank" class="test-button">Check Dashboard</a>
+                    <div class="status-indicator status-pending" onclick="toggleStatus(this)"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 40px; padding: 20px; background: #f8f9fa; border-radius: 10px;">
+            <h3>🎯 Verification Complete!</h3>
+            <p>After testing, check Firebase Console to confirm collections are visible and login flows work instantly.</p>
+            <button class="test-button" onclick="updateCollectionStatus()" style="font-size: 1.1em; padding: 15px 30px;">Update Collection Status</button>
+        </div>
+    </div>
+    
+    <script>
+        function toggleStatus(element) {
+            if (element.classList.contains('status-pending')) {
+                element.classList.remove('status-pending');
+                element.classList.add('status-success');
+            } else if (element.classList.contains('status-success')) {
+                element.classList.remove('status-success');
+                element.classList.add('status-failed');
+            } else {
+                element.classList.remove('status-failed');
+                element.classList.add('status-pending');
+            }
+        }
+        
+        function updateCollectionStatus() {
+            const collections = ['usersCollection', 'propertiesCollection', 'reportsCollection'];
+            
+            collections.forEach(id => {
+                const element = document.getElementById(id);
+                const exists = confirm(`Does the "${id.replace('Collection', '')}" collection exist in Firebase Console?`);
+                
+                if (exists) {
+                    element.classList.remove('missing');
+                    element.classList.add('exists');
+                    element.querySelector('.collection-status-text').textContent = '✅ Visible';
+                } else {
+                    element.classList.remove('exists');
+                    element.classList.add('missing');
+                    element.querySelector('.collection-status-text').textContent = '❌ Not Visible';
+                }
+            });
+        }
+        
+        // Auto-check for console logs
+        setInterval(() => {
+            const logs = performance.getEntriesByType('navigation');
+            console.log('🔥 VERIFICATION - Checking for Firestore operations...');
+        }, 5000);
+    </script>
+</body>
+</html>

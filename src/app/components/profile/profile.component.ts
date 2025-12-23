@@ -31,29 +31,29 @@ export class ProfileComponent implements OnInit {
     });
   }
 
-  async ngOnInit() {
-    try {
-      const user = this.authService.getCurrentUser();
-      if (user) {
-        this.userProfile = await this.authService.getUserProfilePromise(user.uid);
-        if (this.userProfile) {
+  ngOnInit() {
+    this.authService.getCurrentUserProfile().subscribe({
+      next: (profile) => {
+        if (profile) {
+          this.userProfile = profile;
           this.profileForm.patchValue({
-            displayName: this.userProfile.displayName || '',
-            email: this.userProfile.email,
-            phoneNumber: this.userProfile.phoneNumber || ''
+            displayName: profile.displayName || '',
+            email: profile.email,
+            phoneNumber: profile.phoneNumber || ''
           });
           // Make email readonly since it's the login identifier
           this.profileForm.get('email')?.disable();
+        } else {
+          this.router.navigate(['/login']);
         }
-      } else {
-        this.router.navigate(['/login']);
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Error loading profile:', error);
+        this.errorMessage = 'Failed to load profile';
+        this.isLoading = false;
       }
-    } catch (error) {
-      console.error('Error loading profile:', error);
-      this.errorMessage = 'Failed to load profile';
-    } finally {
-      this.isLoading = false;
-    }
+    });
   }
 
   toggleEdit() {
@@ -68,13 +68,6 @@ export class ProfileComponent implements OnInit {
         const formValue = this.profileForm.value;
         
         // Update the profile in Firestore
-        const updatedProfile: UserProfile = {
-          ...this.userProfile,
-          displayName: formValue.displayName,
-          phoneNumber: formValue.phoneNumber
-        };
-
-        // Update the profile in Firestore
         const user = this.authService.getCurrentUser();
         if (user) {
           await this.authService.updateUserProfile(user.uid, {
@@ -83,7 +76,11 @@ export class ProfileComponent implements OnInit {
           });
           
           // Update local profile
-          this.userProfile = updatedProfile;
+          this.userProfile = {
+            ...this.userProfile,
+            displayName: formValue.displayName,
+            phoneNumber: formValue.phoneNumber
+          };
         }
         
         this.successMessage = 'Profile updated successfully!';

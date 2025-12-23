@@ -13,6 +13,12 @@ import { UserProfile } from '../../../core/models/user.model';
       <div class="row">
         <div class="col-12">
           <div class="bg-light rounded h-100 p-4">
+            <!-- CLEAR IDENTIFICATION FOR TESTING -->
+            <div class="alert alert-info text-center mb-4">
+              <h3 class="mb-0">🏠 CUSTOMER PANEL ACTIVE</h3>
+              <p class="mb-0" *ngIf="userProfile">Welcome, {{ userProfile.displayName || 'Customer' }}! (Role: {{ userProfile.role | uppercase }})</p>
+            </div>
+            
             <h6 class="mb-4">Customer Dashboard</h6>
             
             <!-- Welcome Section -->
@@ -80,22 +86,22 @@ import { UserProfile } from '../../../core/models/user.model';
                   <h6 class="mb-3">Quick Actions</h6>
                   <div class="row g-3">
                     <div class="col-md-3">
-                      <a routerLink="/customer/browse" class="btn btn-primary w-100">
+                      <a routerLink="/property" class="btn btn-primary w-100">
                         <i class="fa fa-search me-2"></i>Browse Properties
                       </a>
                     </div>
                     <div class="col-md-3">
-                      <a routerLink="/customer/saved-properties" class="btn btn-outline-primary w-100">
+                      <a routerLink="/wishlist" class="btn btn-outline-primary w-100">
                         <i class="fa fa-heart me-2"></i>View Saved
                       </a>
                     </div>
                     <div class="col-md-3">
-                      <a routerLink="/customer/inquiries" class="btn btn-outline-success w-100">
-                        <i class="fa fa-envelope me-2"></i>My Inquiries
+                      <a routerLink="/property" class="btn btn-outline-success w-100">
+                        <i class="fa fa-envelope me-2"></i>Browse Properties
                       </a>
                     </div>
                     <div class="col-md-3">
-                      <a routerLink="/customer/profile" class="btn btn-outline-info w-100">
+                      <a routerLink="/profile" class="btn btn-outline-info w-100">
                         <i class="fa fa-user me-2"></i>Update Profile
                       </a>
                     </div>
@@ -164,17 +170,34 @@ export class CustomerDashboardComponent implements OnInit {
   ];
 
   ngOnInit() {
-    const user = this.authService.getCurrentUser();
-    if (user) {
-      this.authService.getUserProfile(user.uid).subscribe({
-        next: (profile) => {
-          this.userProfile = profile;
-        },
-        error: (error) => {
-          console.error('Error fetching user profile:', error);
+    console.log('🔍 CUSTOMER DASHBOARD - Loading dashboard...');
+    this.authService.getCurrentUserProfile().subscribe({
+      next: (profile) => {
+        console.log('🔍 CUSTOMER DASHBOARD - Profile loaded:', profile);
+        this.userProfile = profile;
+        if (profile) {
+          // Calculate profile completion percentage
+          this.calculateProfileCompletion(profile);
         }
-      });
-    }
+      },
+      error: (error) => {
+        console.error('🔍 CUSTOMER DASHBOARD - Error fetching user profile:', error);
+      }
+    });
+  }
+
+  private calculateProfileCompletion(profile: UserProfile): void {
+    let completedFields = 0;
+    const totalFields = 6; // displayName, email, phoneNumber, aadhaarNumber, panNumber, drivingLicense
+
+    if (profile.displayName) completedFields++;
+    if (profile.email) completedFields++;
+    if (profile.phoneNumber) completedFields++;
+    if (profile.aadhaarNumber) completedFields++;
+    if (profile.panNumber) completedFields++;
+    if (profile.drivingLicense) completedFields++;
+
+    this.stats.profileComplete = Math.round((completedFields / totalFields) * 100);
   }
   
   getStatusClass(status: string): string {

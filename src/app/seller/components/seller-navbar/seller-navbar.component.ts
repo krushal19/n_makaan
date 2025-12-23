@@ -24,14 +24,11 @@ import { AuthService } from '../../../services/auth.service';
             <a routerLink="/seller/dashboard" routerLinkActive="active" class="nav-item nav-link">
               <i class="fa fa-tachometer-alt me-2"></i>Dashboard
             </a>
+            <a routerLink="/seller/properties" routerLinkActive="active" class="nav-item nav-link">
+              <i class="fa fa-building me-2"></i>Properties
+            </a>
             <a routerLink="/seller/add-property" routerLinkActive="active" class="nav-item nav-link">
               <i class="fa fa-plus me-2"></i>Add Property
-            </a>
-            <a routerLink="/seller/my-properties" routerLinkActive="active" class="nav-item nav-link">
-              <i class="fa fa-building me-2"></i>My Properties
-            </a>
-            <a routerLink="/seller/my-customers" routerLinkActive="active" class="nav-item nav-link">
-              <i class="fa fa-users me-2"></i>My Customers
             </a>
             <a routerLink="/seller/profile" routerLinkActive="active" class="nav-item nav-link">
               <i class="fa fa-user me-2"></i>Profile

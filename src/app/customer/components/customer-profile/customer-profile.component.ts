@@ -115,20 +115,18 @@ export class CustomerProfileComponent implements OnInit {
   }
 
   ngOnInit() {
-    const user = this.authService.getCurrentUser();
-    if (user) {
-      this.authService.getUserProfile(user.uid).subscribe({
-        next: (profile) => {
-          this.userProfile = profile;
-          if (this.userProfile) {
-            this.profileForm.patchValue(this.userProfile);
-          }
-        },
-        error: (error) => {
-          console.error('Error fetching user profile:', error);
+    // Use the new getCurrentUserProfile method for real-time updates
+    this.authService.getCurrentUserProfile().subscribe({
+      next: (profile) => {
+        this.userProfile = profile;
+        if (this.userProfile) {
+          this.profileForm.patchValue(this.userProfile);
         }
-      });
-    }
+      },
+      error: (error) => {
+        console.error('Error fetching user profile:', error);
+      }
+    });
   }
 
   async onSubmit() {

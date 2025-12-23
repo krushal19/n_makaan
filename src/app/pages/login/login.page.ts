@@ -30,21 +30,40 @@ export class LoginPage {
             // Step 1: Authenticate with Firebase
             const user = await this.authService.login(this.email, this.password);
 
-            // Step 2: Fetch user profile from Firestore
-            const profile = await this.authService.getUserProfilePromise(user.uid);
-            
-            if (!profile) {
-                this.errorMessage = 'User profile not found. Please contact support.';
-                this.loading = false;
-                return;
-            }
+            // Step 2: Fetch user profile from Firestore using Observable
+            this.authService.getUserProfile(user.uid).subscribe({
+                next: (profile) => {
+                    if (!profile) {
+                        this.errorMessage = 'User profile not found. Please contact support.';
+                        this.loading = false;
+                        return;
+                    }
 
-            // Step 3: Success message and redirect
-            this.successMessage = `Welcome back, ${profile.displayName || 'User'}!`;
+                    // Step 3: Success message and redirect based on role
+                    this.successMessage = `Welcome back, ${profile.displayName || (profile.email ? profile.email.split('@')[0] : 'Guest')}!`;
 
-            setTimeout(() => {
-                this.router.navigate(['/dashboard']);
-            }, 500);
+                    setTimeout(() => {
+                        // Role-based redirection
+                        switch (profile.role) {
+                            case 'admin':
+                                this.router.navigate(['/admin/dashboard']);
+                                break;
+                            case 'seller':
+                                this.router.navigate(['/seller']);
+                                break;
+                            case 'customer':
+                            default:
+                                this.router.navigate(['/dashboard']);
+                                break;
+                        }
+                    }, 500);
+                },
+                error: (error) => {
+                    console.error('Error fetching user profile:', error);
+                    this.errorMessage = 'Failed to load user profile. Please try again.';
+                    this.loading = false;
+                }
+            });
 
         } catch (error: any) {
             this.loading = false;
